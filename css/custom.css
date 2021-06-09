@@ -17,3 +17,10 @@
   margin-top: 100px;
 }
 
+.snapcontainer {
+  scroll-snap-type: y mandatory;
+}
+
+.snapchild {
+  scroll-snap-align: start;
+}
