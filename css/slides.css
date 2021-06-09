@@ -6351,6 +6351,12 @@ h1 {
 }
 /* phone portrait and > */
 @media (max-width: 435px) {
+  .slides > div {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-align: start;
+    scroll-behavior: smooth
+  } 
+    
   .flex > [class*='col-'] {
     width: 100%;
   }
