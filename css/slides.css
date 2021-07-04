@@ -1784,6 +1784,8 @@ html.mobile .showForMobileInline {
           transform: translateY(0) scale(1);
   opacity: 1;
 }
+
+
 .helpBubble:hover:after {
   opacity: 1;
 }
