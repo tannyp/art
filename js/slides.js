@@ -15,6 +15,13 @@ https://designmodo.com/slides/
 
 */
 
+$(function() {
+  $('a[href*=#]').on('click', function(e) {
+    e.preventDefault();
+    $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top}, 500, 'linear');
+  });
+});
+
 window.inAction = 1;
 window.allowSlide = 1;
 window.blockScroll = 1;
