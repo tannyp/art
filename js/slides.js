@@ -62,7 +62,7 @@ $(document).ready(function() { "use strict";
   window.isScroll = $body.hasClass('scroll');
   window.isSimplifiedMobile = $body.hasClass('simplifiedMobile');
   if (window.isScroll || window.isSimplifiedMobile && window.isMobile) { $html.addClass('scrollable'); }
-
+$html.addClass('scrollable');
   $html.addClass('page-ready');
 
   //Set speed
