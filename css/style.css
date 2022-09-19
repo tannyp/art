@@ -250,6 +250,10 @@ a:hover, a:active, a:focus {
     padding-left: 8px;
 }
 
+.navbar-right {
+    padding-right: 10px;
+}
+
 .navbar-default .navbar-nav > li a:hover {
     color: #333 !important;
 }
