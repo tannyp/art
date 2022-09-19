@@ -650,6 +650,8 @@ footer {
     border-top: 1px solid #f0f0f0;
     padding: 100px 0px;
     position: relative;
+    align-content: center
+
 }
 
 footer .col-md-3 .fa {
@@ -669,6 +671,7 @@ footer hr {
 footer .footer-copyright {
   padding-top: 16px;
 }
+
 
 
 /*---------------------------------------
@@ -694,7 +697,7 @@ footer .footer-copyright {
     text-decoration: none;
     transition: all 0.4s ease-in-out;
     text-align: center;
-    vertical-align: middle;
+    vertical-align:middle;
     position: relative;
     margin: 22px 12px 10px 12px;
 }
