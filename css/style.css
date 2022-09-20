@@ -282,7 +282,7 @@ a:hover, a:active, a:focus {
   }
 
 .navbar-default .navbar-toggle .icon-bar {
-    background: #bdc3c7;
+    background: black;
     border-color: transparent;
   }
 
