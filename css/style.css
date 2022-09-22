@@ -157,6 +157,11 @@ a:hover, a:active, a:focus {
     position: relative
 }
 
+.testi-pic {
+    margin-left: 48px;
+    margin-right: 48px;
+}
+
 
 /*---------------------------------------
     Preloader section              
