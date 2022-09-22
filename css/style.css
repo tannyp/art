@@ -320,8 +320,12 @@ a:hover, a:active, a:focus {
     padding-bottom: 40px;
 }
 
-#home hr {
-  width: 82px;
+#assets hr {
+  width: 70%;
+  margin-top: 32px;
+}
+#testimonials hr {
+  width: 70%;
   margin-top: 32px;
 }
 
