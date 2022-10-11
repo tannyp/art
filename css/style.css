@@ -46,15 +46,15 @@ h3 {
 
 h4 {
   color: #666;
-  font-size: 12px;
-  font-weight: normal;
+  font-size: 13px;
+  font-weight: 600;
   letter-spacing: 2px;
 }
 
 p {
     color: #333;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 450;
     line-height: 26px;
     letter-spacing: 0.2px;
 }
@@ -160,6 +160,9 @@ a:hover, a:active, a:focus {
 .testi-pic {
     margin-left: 48px;
     margin-right: 48px;
+}
+.unavail-link {
+    opacity: 0.4;
 }
 
 .panel-heading .accordion-toggle:after {
