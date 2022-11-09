@@ -38,7 +38,7 @@ h2 {
   line-height: 46px;
   font-weight:500;
   font-family: "Times New Roman", Times, serif;
-  color: darkslategray;
+  color: #666;
 }
 h3 {
   font-size: 26px;
@@ -749,7 +749,7 @@ footer .footer-copyright {
   font-weight:500;
   font-family: "Times New Roman", Times, serif;
   margin-bottom: 24px;
-      color: darkslategray;
+      color: #666;
 
 }
   h1 {
