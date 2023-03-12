@@ -817,6 +817,30 @@ Testimonials in about section
 /*---------------------------------------
    Footer section              
 -----------------------------------------*/
+
+.social-links {
+  margin-top: 40px;
+  display: flex;
+}
+
+.social-link-a {
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #444444;
+  color: #fff;
+  line-height: 1;
+  margin-right: 8px;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
+
+.social-link-a:hover {
+  background: #000000;
+}
+
 .site-footer {
   background-color: #FFFFFF;
 	text-align: center;
@@ -879,7 +903,7 @@ footer .col-md-3 .fa {
   font-size: 42px;
 }
 
-footer a {
+footer {
   color: #555;
 }
 
@@ -936,6 +960,10 @@ footer .footer-copyright {
 
 
 @media (max-width: 767px) {
+    
+.social-links {
+    margin-top: 15px;
+}
 .name-text {
   font-size: 48px;
   line-height: 46px;
