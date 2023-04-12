@@ -22,6 +22,9 @@ h1,h2,h3,h4,h5,h6 {
 	color: #222;
 }
 
+.bold-text {
+  font-weight:500;
+}
 .copy-email-btn{
   font-size: xx-small;
   background-color: transparent;
