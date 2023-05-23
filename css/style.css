@@ -44,6 +44,12 @@ h1,h2,h3,h4,h5,h6 {
 
 }
 
+.main-img{
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+}
+
 
 p{
   font-family: 'Lora', serif;
@@ -636,7 +642,16 @@ input[type=radio] {
 	.hovereffect{
 		margin-bottom: 25px;
 	}
+
+  .cards {
+    position: relative;
+    max-width: 50%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
   .main-img{
+    width: 200px;
     max-width: 100%;
     height: auto;
   }
