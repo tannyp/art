@@ -44,6 +44,18 @@ h1,h2,h3,h4,h5,h6 {
 
 }
 
+.work-img{
+  width: 200px;
+  max-width: 100%;
+  height: auto;
+}
+
+.main-img{
+  max-width: 100%;
+  height: auto;
+}
+
+
 p{
   font-family: 'Lora', serif;
 	font-weight:300;
@@ -643,11 +655,17 @@ input[type=radio] {
     margin-bottom: 20px;
   }
 
-  .main-img{
+  .work-img{
     width: 200px;
     max-width: 100%;
     height: auto;
   }
+
+  .main-img{
+    max-width: 100%;
+    height: auto;
+  }
+
   .title-spacing {
     margin-top: 32px;
     margin-left: 16px;
