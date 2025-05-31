@@ -84,6 +84,103 @@ $(document).on('click', 'a[href^="#"]', function(e) {
     $('body, html').animate({scrollTop: pos});
 });
 
+// 3D Carousel
+document.addEventListener('DOMContentLoaded', function() {
+    function initCarousel(carouselId) {
+        const carousel = document.getElementById(carouselId);
+        const items = carousel.getElementsByClassName('carousel-3d-item');
+        const totalItems = items.length;
+        let currentIndex = 2; // Start with middle image (index 2 for 5 images)
+
+        function mod(n, m) {
+            return ((n % m) + m) % m;
+        }
+
+        function updateCarousel() {
+            // First, hide all images
+            for(let i = 0; i < totalItems; i++) {
+                items[i].style.display = 'none';
+                items[i].style.pointerEvents = 'none';
+            }
+
+            // Calculate indices for left, center, and right images
+            const leftIndex = mod(currentIndex - 1, totalItems);
+            const centerIndex = currentIndex;
+            const rightIndex = mod(currentIndex + 1, totalItems);
+
+            // Show and position only the three visible images
+            const visibleIndices = [leftIndex, centerIndex, rightIndex];
+            
+            visibleIndices.forEach((index, position) => {
+                const item = items[index];
+                item.style.display = 'block';
+                
+                // Position: -1 for left, 0 for center, 1 for right
+                const offset = position - 1;
+                
+                const x = offset * 280; // Adjust spacing between images
+                const z = Math.abs(offset) * -100;
+                const scale = Math.max(0.8, 1 - Math.abs(offset) * 0.2);
+                const opacity = Math.max(0.6, 1 - Math.abs(offset) * 0.3);
+                
+                item.style.transform = `translate3d(${x}px, 0, ${z}px) scale(${scale})`;
+                item.style.opacity = opacity;
+                item.style.zIndex = 1000 - Math.abs(offset);
+                
+                // Enable clicking only on side images
+                if (offset !== 0) {
+                    item.style.pointerEvents = 'auto';
+                    item.style.cursor = 'pointer';
+                }
+            });
+        }
+
+        // Initial setup
+        updateCarousel();
+
+        // Click handlers for items
+        for(let i = 0; i < items.length; i++) {
+            items[i].addEventListener('click', () => {
+                // When clicking left image
+                if (i === mod(currentIndex - 1, totalItems)) {
+                    currentIndex = mod(currentIndex - 1, totalItems);
+                    updateCarousel();
+                }
+                // When clicking right image
+                else if (i === mod(currentIndex + 1, totalItems)) {
+                    currentIndex = mod(currentIndex + 1, totalItems);
+                    updateCarousel();
+                }
+            });
+        }
+
+        // Touch swipe support
+        let touchStartX = 0;
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        carousel.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > 50) { // Minimum swipe distance
+                if (diff > 0) {
+                    currentIndex = mod(currentIndex + 1, totalItems);
+                } else {
+                    currentIndex = mod(currentIndex - 1, totalItems);
+                }
+                updateCarousel();
+            }
+        });
+    }
+
+    // Initialize all carousels
+    initCarousel('carousel-1');
+    initCarousel('carousel-2');
+    initCarousel('carousel-3');
+});
+
 
  
 
