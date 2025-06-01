@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>TANJOT PANESAR</title>
+    <title>__</title>
 
     <!-- Css -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -51,14 +51,16 @@
             position: relative;
             perspective: 1000px;
             width: 100%;
+            height: 400px; /* Adjust as needed */
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         .carousel-3d {
             position: relative;
-            width: 840px; /* 280px * 3 for three visible images */
-            height: 400px;
+            width: 100%;
+            height: 100%;
             transform-style: preserve-3d;
         }
 
@@ -67,31 +69,10 @@
             width: 280px;
             top: 0;
             left: 50%;
-            margin-left: -140px; /* Half of width */
+            margin-left: -140px;
             transition: all 0.3s ease;
             opacity: 0;
             pointer-events: none;
-        }
-
-        /* Left image */
-        .carousel-3d-item:nth-child(2) {
-            transform: translate3d(-280px, 0, -100px) scale(0.8);
-            opacity: 0.6;
-            pointer-events: auto;
-        }
-
-        /* Center image */
-        .carousel-3d-item:nth-child(3) {
-            transform: translate3d(0, 0, 0) scale(1);
-            opacity: 1;
-            z-index: 1;
-        }
-
-        /* Right image */
-        .carousel-3d-item:nth-child(4) {
-            transform: translate3d(280px, 0, -100px) scale(0.8);
-            opacity: 0.6;
-            pointer-events: auto;
         }
 
         .carousel-3d-item img {
@@ -131,32 +112,40 @@
         }
 
         .video-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin: 40px 0;
-            width: 100%;
-            margin-bottom: 100px;
-            padding-bottom: 100px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 0 -20px;
+            align-items: flex-start;
         }
 
         .video-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
+            flex: 1;
+            padding: 0 20px;
+            width: 33.333%;
+            min-width: 0;
         }
 
         .header-content {
-            display: flex;
-            flex-direction: column;
-            min-height: 120px; /* Force same height for all headers */
+            height: 100px;
+            margin-bottom: 20px;
+        }
+
+        .header-content h4 {
             margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .header-content h6 {
+            margin-bottom: 5px;
+            line-height: 1.4;
         }
 
         .video-frame {
-            width: 100%;
-            padding-top: 56.25%; /* 16:9 aspect ratio */
             position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
             background: #000;
         }
 
@@ -166,7 +155,28 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
+            border: 0;
+        }
+
+        /* Adjust text spacing */
+        .video-container h4 {
+            margin-bottom: 1rem;
+        }
+
+        .video-container h6 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Additional spacing for mobile */
+        @media (max-width: 768px) {
+            .video-section {
+                flex-direction: column;
+            }
+            
+            .video-container {
+                width: 100%;
+                margin-bottom: 30px;
+            }
         }
 
         /* Reset all margins */
@@ -225,6 +235,71 @@
             min-height: 100vh;
             padding-bottom: 100px;
         }
+
+        .navbar-default {
+            background: transparent;
+            border: none;
+            margin: 0;
+            padding: 20px 0;
+        }
+
+        .navbar-nav > li > a {
+            padding: 0;
+        }
+
+        .navbar-nav > li > a h6.inter-font {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .nav.navbar-nav.navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .navbar-right {
+            margin-right: 0;
+        }
+
+        /* Spacer between video rows */
+        .video-row-spacer {
+            height: 60px; /* Adjust this value for more/less space between rows */
+        }
+
+        /* Grid Container */
+        .videos-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 60px; /* Space between rows */
+        }
+
+        /* Row Styling */
+        .video-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px; /* Space between videos in a row */
+        }
+
+        /* Individual Video Item */
+        .video-item {
+            flex: 1;
+            width: calc(33.333% - 27px); /* Equal width with gap consideration */
+        }
+
+        /* Remove all transitions initially */
+        .no-transition {
+            transition: none !important;
+        }
+
+        /* Only add transitions after initialization */
+        .carousel-3d-item.initialized {
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 
@@ -238,15 +313,14 @@
 					<span class="bar2"></span>
 					<span class="bar3"></span>
 			  </div>
-			  <a href="index.html"><h4 class="title-spacing">Tanjot Panesar</h4></a>
-
 			</div>
 
 			<div class="collapse navbar-collapse" id="main-menu">
 			   <ul class="nav navbar-nav navbar-right">
-		<li><a href="work.html"><h6 class="inter-font">Movement Direction</h6></a></li>
-				<li><a href="class.html"><h6 class="inter-font">Mindfullness</h6></a></li>
-				<li><a href="contact.html"><h6 class="inter-font">CONTACT</h6></a></li>
+				<li><a href="index.html"><h6 class="inter-font">Methodology</h6></a></li>
+				<li><a href="work.html"><h6 class="inter-font">Movement Direction</h6></a></li>
+				<li><a href="program.html"><h6 class="inter-font">Mindfulness</h6></a></li>
+				<li><a href="contact.html"><h6 class="inter-font">More</h6></a></li>
 			  </ul>
 			</div><!-- /.navbar-collapse -->
 		</div><!-- /.container-fluid -->
@@ -265,15 +339,15 @@
 
     <!-- Gallery 1 (Darmat) -->
     <div class="container heading-space-1">
-        <h4>PROJECT: "Darmat"</h4>
+        <h4>Darmat (be not afraid)</h4>
         <h6>DIRECTOR/PHOTOGRPAHER: <i>Akash Tucker</i></h6>
         <h6>MODEL: <i>Kaj</i></h6>
-        <h6>LOCATION: <i>Toronto.</i></h6>
+        <h6>LOCATION: <i>Toronto, CA.</i></h6>
         
         <div class="carousel-3d-container">
             <div class="carousel-3d" id="carousel-1">
                 <div class="carousel-3d-item">
-                    <img src="img/akash/IMG-4272.jpg" alt="Darmat 1">
+                    <img src="img/akash/IMG-4273.jpg" alt="Darmat 1">
                 </div>
                 <!-- Left image on initial view -->
                 <div class="carousel-3d-item">
@@ -281,14 +355,11 @@
                 </div>
                 <!-- Center image on initial view -->
                 <div class="carousel-3d-item">
-                    <img src="img/akash/IMG-4274.jpg" alt="Darmat 3">
+                    <img src="img/akash/IMG-4272.jpg" alt="Darmat 3">
                 </div>
                 <!-- Right image on initial view -->
                 <div class="carousel-3d-item">
-                    <img src="img/akash/IMG-4272.jpg" alt="Darmat 4">
-                </div>
-                <div class="carousel-3d-item">
-                    <img src="img/akash/IMG-4271.jpg" alt="Darmat 5">
+                    <img src="img/akash/IMG-4274.jpg" alt="Darmat 4">
                 </div>
             </div>
         </div>
@@ -296,10 +367,10 @@
 
     <!-- Gallery 2 -->
     <div class="container heading-space-1">
-        <h4>PROJECT: "Gallery 2"</h4>
-        <h6>DIRECTOR/PHOTOGRPAHER: <i>Name</i></h6>
-        <h6>MODEL: <i>Name</i></h6>
-        <h6>LOCATION: <i>Location</i></h6>
+        <h4>Summer in Portifino</h4>
+        <h6>DIRECTOR/PHOTOGRPAHER: <i>Akash Tucker</i></h6>
+        <h6>MODEL: <i>Asha, Olivia - Next Model Talent</i></h6>
+        <h6>LOCATION: <i>Toronto, CA.</i></h6>
         
         <div class="carousel-3d-container">
             <div class="carousel-3d" id="carousel-2">
@@ -357,71 +428,179 @@
 
     <!-- Gallery 3 -->
     <div class="container heading-space-1">
-        <h4>PROJECT: "Gallery 3"</h4>
-        <h6>DIRECTOR/PHOTOGRPAHER: <i>Name</i></h6>
-        <h6>MODEL: <i>Name</i></h6>
-        <h6>LOCATION: <i>Location</i></h6>
+        <h4>Universe</h4>
+        <h6>DIRECTOR/PHOTOGRPAHER: <i>Gabe Galedo</i></h6>
+        <h6>MODEL: <i>Gabrielle</i></h6>
+        <h6>LOCATION: <i>Vancouver, CA</i></h6>
         
         <div class="carousel-3d-container">
             <div class="carousel-3d" id="carousel-3">
                 <div class="carousel-3d-item">
-                    <img src="img/akash2/IMG_2911.JPG" alt="Image 1">
-                </div>
-                <!-- Left image on initial view -->
-                <div class="carousel-3d-item">
-                    <img src="img/akash2/IMG_2905.JPG" alt="Image 2">
-                </div>
-                <!-- Center image on initial view -->
-                <div class="carousel-3d-item">
-                    <img src="img/akash2/IMG_2901.JPG" alt="Image 3">
-                </div>
-                <!-- Right image on initial view -->
-                <div class="carousel-3d-item">
-                    <img src="img/akash2/IMG_2911.JPG" alt="Image 4">
+                    <img src="img/universe/DSCF1614-min.JPG" alt="Faded 1">
                 </div>
                 <div class="carousel-3d-item">
-                    <img src="img/akash2/IMG_2905.JPG" alt="Image 5">
+                    <img src="img/universe/DSCF1624-min.JPG" alt="Faded 2">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/universe/DSCF1688-min.JPG" alt="Faded 3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery 4 -->
+    <div class="container heading-space-1">
+        <h4>Elan Vital Relase</h4>
+        <h6>DIRECTOR/PHOTOGRPAHER: <i>Akash Tucker</i></h6>
+        <h6>MODEL: <i>Pedro & Elijah</i></h6>
+        <h6>LOCATION: <i>Toronto, CA</i></h6>
+        
+        <div class="carousel-3d-container">
+            <div class="carousel-3d" id="carousel-4">
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2918.JPG" alt="Image 1">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2887.JPG" alt="Image 2">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2889.JPG" alt="Image 3">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2885.JPG" alt="Image 4">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2891.JPG" alt="Image 5">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2917.JPG" alt="Image 6">
+                </div>
+                <div class="carousel-3d-item">
+                    <img src="img/elan/IMG_2915.JPG" alt="Image 7">
+                </div>
+            
+            </div>
+        </div>
+    </div>
+
+	 <!-- Gallery 5 -->
+	 <div class="container heading-space-1">
+        <h4>Lotus</h4>
+        <h6>DIRECTOR/PHOTOGRPAHER: <i>Akash Tucker</i></h6>
+        <h6>MODEL: <i>Kaj</i></h6>
+        <h6>LOCATION: <i>Toronto, CA</i></h6>
+        
+        <div class="carousel-3d-container">
+            <div class="carousel-3d" id="carousel-5">
+                <div class="carousel-3d-item">
+                    <img src="img/kaj/58F38497-A76D-4B80-A835-CC515E783840.JPG" alt="Kaj 1">
+                </div>
+		
+                <div class="carousel-3d-item">
+                    <img src="img/kaj/7300742C-3542-48F8-BC46-AC83C0B3A83B.JPG" alt="Kaj 2">
+                </div>
+            	<div class="carousel-3d-item">
+                    <img src="img/kaj/D6E46398-0D4B-458E-9167-E2139ADC66D4.JPG" alt="Kaj 3">
+                </div>
+              
+            </div>
+        </div>
+    </div>
+
+	 <!-- Gallery 6 -->
+	 <div class="container heading-space-1">
+        <h4>Faded</h4>
+        <h6>DIRECTOR/PHOTOGRPAHER: <i>Andrew Ye</i></h6>
+        <h6>MODEL: <i>Caitlin & Liam</i></h6>
+        <h6>LOCATION: <i>New York, US</i></h6>
+        
+        <div class="carousel-3d-container">
+            <div class="carousel-3d" id="carousel-6">
+                <div class="carousel-3d-item">
+                    <img src="img/328D0DAA-4B91-4DBA-B138-2D2DAC9ACE7D 2.JPG" alt="Faded 1">
                 </div>
             </div>
         </div>
     </div>
 
 	<div class="container heading-space-1">
-		<div class="video-section">
-			<!-- Video 1 -->
-			<div class="video-container">
-				<div class="header-content">
-					<h4>PROJECT: "UNIVERSE"</h4>
-					<h6>PREMIERED: <i>Innovate Film Festival</i></h6>
-					<h6>LOCATION: <i>Vancouver.</i></h6>
+		<!-- Videos Grid Container -->
+		<div class="videos-grid">
+			<!-- Row 1 -->
+			<div class="video-row">
+				<!-- Video 1 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "UNIVERSE"</h4>
+						<h6>PREMIERED: <i>Innovate Film Festival</i></h6>
+						<h6>LOCATION: <i>Vancouver.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/g5RTKrYe4Ec" frameborder="0" allowfullscreen></iframe>
+					</div>
 				</div>
-				<div class="video-frame">
-					<iframe src="https://www.youtube-nocookie.com/embed/g5RTKrYe4Ec" frameborder="0" allowfullscreen></iframe>
+
+				<!-- Video 2 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "WE'RE LOSING THE MOON"</h4>
+						<h6>STAGE: <i>Legends Showcase - City Centre Dance</i></h6>
+						<h6>LOCATION: <i>Toronto.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/--gZRU7GYgc" frameborder="0" allowfullscreen></iframe>
+					</div>
+				</div>
+
+				<!-- Video 3 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "RESONANCE"</h4>
+						<h6>COLLABORATION: <i>Justin Feldbruegge</i></h6>
+						<h6>LOCATION: <i>Toronto.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/O1VFewvg5SQ" frameborder="0" allowfullscreen></iframe>
+					</div>
 				</div>
 			</div>
 
-			<!-- Video 2 -->
-			<div class="video-container">
-				<div class="header-content">
-					<h4>PROJECT: "WE'RE LOSING THE MOON"</h4>
-					<h6>STAGE: <i>Legends Showcase - City Centre Dance</i></h6>
-					<h6>LOCATION: <i>Toronto.</i></h6>
+			<!-- Row 2 -->
+			<div class="video-row">
+				<!-- Video 4 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "UNIVERSE"</h4>
+						<h6>PREMIERED: <i>Innovate Film Festival</i></h6>
+						<h6>LOCATION: <i>Vancouver.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/g5RTKrYe4Ec" frameborder="0" allowfullscreen></iframe>
+					</div>
 				</div>
-				<div class="video-frame">
-					<iframe src="https://www.youtube-nocookie.com/embed/--gZRU7GYgc" frameborder="0" allowfullscreen></iframe>
-				</div>
-			</div>
 
-			<!-- Video 3 -->
-			<div class="video-container">
-				<div class="header-content">
-					<h4>PROJECT: "RESONANCE"</h4>
-					<h6>COLLABORATION: <i>Justin Feldbruegge</i></h6>
-					<h6>MUSIC: <i>The Code</i></h6>
-					<h6>LOCATION: <i>Toronto.</i></h6>
+				<!-- Video 5 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "WE'RE LOSING THE MOON"</h4>
+						<h6>STAGE: <i>Legends Showcase - City Centre Dance</i></h6>
+						<h6>LOCATION: <i>Toronto.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/--gZRU7GYgc" frameborder="0" allowfullscreen></iframe>
+					</div>
 				</div>
-				<div class="video-frame">
-					<iframe src="https://www.youtube-nocookie.com/embed/O1VFewvg5SQ" frameborder="0" allowfullscreen></iframe>
+
+				<!-- Video 6 -->
+				<div class="video-item">
+					<div class="header-content">
+						<h4>PROJECT: "RESONANCE"</h4>
+						<h6>COLLABORATION: <i>Justin Feldbruegge</i></h6>
+						<h6>LOCATION: <i>Toronto.</i></h6>
+					</div>
+					<div class="video-frame">
+						<iframe src="https://www.youtube-nocookie.com/embed/O1VFewvg5SQ" frameborder="0" allowfullscreen></iframe>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -463,6 +642,117 @@
 
 		videoModal.addEventListener('hidden.bs.modal', function () {
 			videoFrame.src = ''; // Stop the video when modal closes
+		});
+
+		// 3D Carousel
+		document.addEventListener('DOMContentLoaded', function() {
+			function initCarousel(carouselId) {
+				const carousel = document.getElementById(carouselId);
+				if (!carousel) return;
+				
+				const items = carousel.getElementsByClassName('carousel-3d-item');
+				
+				// Set initial positions without transitions
+				// Wait a tiny bit before enabling transitions
+				setTimeout(() => {
+					for(let item of items) {
+						item.classList.add('initialized');
+					}
+				}, 100);
+
+				const totalItems = items.length;
+				let currentIndex = 2; // Start with middle image (index 2 for 5 images)
+
+				function mod(n, m) {
+					return ((n % m) + m) % m;
+				}
+
+				function updateCarousel() {
+					// First, hide all images
+					for(let i = 0; i < totalItems; i++) {
+						items[i].style.display = 'none';
+						items[i].style.pointerEvents = 'none';
+					}
+
+					// Calculate indices for left, center, and right images
+					const leftIndex = mod(currentIndex - 1, totalItems);
+					const centerIndex = currentIndex;
+					const rightIndex = mod(currentIndex + 1, totalItems);
+
+					// Show and position only the three visible images
+					const visibleIndices = [leftIndex, centerIndex, rightIndex];
+					
+					visibleIndices.forEach((index, position) => {
+						const item = items[index];
+						item.style.display = 'block';
+						
+						// Position: -1 for left, 0 for center, 1 for right
+						const offset = position - 1;
+						
+						const x = offset * 280; // Adjust spacing between images
+						const z = Math.abs(offset) * -100;
+						const scale = Math.max(0.8, 1 - Math.abs(offset) * 0.2);
+						const opacity = Math.max(0.6, 1 - Math.abs(offset) * 0.3);
+						
+						item.style.transform = `translate3d(${x}px, 0, ${z}px) scale(${scale})`;
+						item.style.opacity = opacity;
+						item.style.zIndex = 1000 - Math.abs(offset);
+						
+						// Enable clicking only on side images
+						if (offset !== 0) {
+							item.style.pointerEvents = 'auto';
+							item.style.cursor = 'pointer';
+						}
+					});
+				}
+
+				// Initial setup
+				updateCarousel();
+
+				// Click handlers for items
+				for(let i = 0; i < items.length; i++) {
+					items[i].addEventListener('click', () => {
+						// When clicking left image
+						if (i === mod(currentIndex - 1, totalItems)) {
+							currentIndex = mod(currentIndex - 1, totalItems);
+							updateCarousel();
+						}
+						// When clicking right image
+						else if (i === mod(currentIndex + 1, totalItems)) {
+							currentIndex = mod(currentIndex + 1, totalItems);
+							updateCarousel();
+						}
+					});
+				}
+
+				// Touch swipe support
+				let touchStartX = 0;
+				carousel.addEventListener('touchstart', (e) => {
+					touchStartX = e.touches[0].clientX;
+				});
+
+				carousel.addEventListener('touchend', (e) => {
+					const touchEndX = e.changedTouches[0].clientX;
+					const diff = touchStartX - touchEndX;
+					
+					if (Math.abs(diff) > 50) { // Minimum swipe distance
+						if (diff > 0) {
+							currentIndex = mod(currentIndex + 1, totalItems);
+						} else {
+							currentIndex = mod(currentIndex - 1, totalItems);
+						}
+						updateCarousel();
+					}
+				});
+			}
+
+			// Initialize all carousels
+			initCarousel('carousel-1');
+			initCarousel('carousel-2');
+			initCarousel('carousel-3');
+			initCarousel('carousel-4');
+			initCarousel('carousel-5');
+			initCarousel('carousel-6');
 		});
 	</script>
 

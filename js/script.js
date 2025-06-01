@@ -88,7 +88,18 @@ $(document).on('click', 'a[href^="#"]', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
     function initCarousel(carouselId) {
         const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+        
         const items = carousel.getElementsByClassName('carousel-3d-item');
+        
+        // Set initial positions without transitions
+        // Wait a tiny bit before enabling transitions
+        setTimeout(() => {
+            for(let item of items) {
+                item.classList.add('initialized');
+            }
+        }, 100);
+
         const totalItems = items.length;
         let currentIndex = 2; // Start with middle image (index 2 for 5 images)
 
@@ -179,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initCarousel('carousel-1');
     initCarousel('carousel-2');
     initCarousel('carousel-3');
+    initCarousel('carousel-4');
+    initCarousel('carousel-5');
+    initCarousel('carousel-6');
 });
 
 

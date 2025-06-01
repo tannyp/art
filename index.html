@@ -2,119 +2,171 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>TANJOT PANESAR</title>
+    <title>_</title>
 
     <!-- Css -->
     <link href="css/bootstrap.css" rel="stylesheet">
-	<link href="css/style.css" rel="stylesheet">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        .header-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 1000;
+            border: none;
+        }
+
+        .navbar-default {
+            background: transparent;
+            border: none;
+            margin: 0;
+            padding: 20px 0;
+            width: 100%;
+        }
+
+        .navbar-nav > li > a {
+            padding: 0;
+            text-decoration: none;
+        }
+
+        .navbar-nav > li > a h6.inter-font {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+            color: black;
+        }
+
+        .nav.navbar-nav.navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-right: 0 !important;
+            float: right !important;
+        }
+
+        .container {
+            padding-right: 30px;
+            padding-left: 30px;
+            width: 100%;
+            max-width: none;
+        }
+
+        .navbar-collapse {
+            padding-right: 0;
+        }
+
+        .navbar-header {
+            float: right;
+        }
+
+        .main-content {
+            margin-top: 80px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Header Section -->
+    <header class="header-section">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <div class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu">    
+                        <span class="bar1"></span>
+                        <span class="bar2"></span>
+                        <span class="bar3"></span>
+                    </div>
+                </div>
 
-	<nav class="navbar navbar-default ">
-		<div class="container">
-			<div class="navbar-header">
-				<div class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu">	
-					<span class="bar1"></span>
-					<span class="bar2"></span>
-					<span class="bar3"></span>
-			  </div>
-			  <a href="index.html"><h4 class="title-spacing">Tanjot Panesar</h4></a>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="nav navbar-nav navbar-right">
+						<li><a href="index.html"><h6 class="inter-font">Methodology</h6></a></li>
+						<li><a href="work.html"><h6 class="inter-font">Movement Direction</h6></a></li>
+						<li><a href="program.html"><h6 class="inter-font">Mindfulness</h6></a></li>
+						<li><a href="contact.html"><h6 class="inter-font">More</h6></a></li>                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-			</div>
+    <!-- Main Content Section -->
+    <main class="main-content">
+        <div class="container">
+            <img class="main-img" style="width: 50%;" src="img/main/DSCF1681.JPG">
+        </div>
 
-			<div class="collapse navbar-collapse" id="main-menu">
-			   <ul class="nav navbar-nav navbar-right">
-				<li><a href="work.html"><h6 class="inter-font">WORK</h6></a></li>
-				<li><a href="class.html"><h6 class="inter-font">EBB</h6></a></li>
-				<li><a href="contact.html"><h6 class="inter-font">CONTACT</h6></a></li>
-			  </ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
-	</nav>
-  
-	<div class="container">
-		<img class="main-img" style="width: 50%;" src="img/main/qi-stand.png">
-	</div>
-
-    <!-- Intro -->
-	<div class="container">
-		<div class="row justify-content-start">
-			<div class="heading-space-1 col-lg-6">
-				<p>I build movement from a foundation of mindfulness and presence.
-					 Through breath, stillness, and intentional motion, I translate color, mood, and 
-					 abstract ideas into physical language. My work often explores emotional extremes—using
-					  striking shapes and intense physicality to create a visceral connection with the audience. 
-					  I aim to blur the line between choreography and instinct, crafting moments that feel raw, honest, and deeply human.
-				</p>
-				<h6 class="inter-font">BASED IN NYC.</h6>
-			</div>
-		</div>
-	</div>
-
-
-	<div class="container heading-space-3">
-		<div class="row justify-content-end">
-			<div class="col-md-4"></div>
-			<div class="col-md-6">
-				<p>
-					My mission is to turn emotion into motion—creating spaces where structure fades and pure feeling remains.
-				</p>
-			</div>
-		</div>
-	</div>
-
-	<div class="container heading-space-2 heading-space-3">
-		<div class="row justify-content-start">
-			<div class="col-lg-4"></div>
-			<div class="col-lg-6">
-				<p>Currently focused on capturing meaningful stories through film and engaging a community of mindful movers and storytellers.</p>
-			</div>
-		</div>
-	</div>
+        <!-- Intro -->
+        <div class="container">
+            <div class="row justify-content-start">
+                <div class="heading-space-1 col-lg-6">
+                    <p class="inter-font intro-text">I build movement from a foundation of mindfulness and presence.
+                            Through breath, stillness, and intentional motion, I translate color, mood, and 
+                            abstract ideas into physical language. My work often explores emotional extremes—using
+                             striking shapes and intense physicality to create a visceral connection with the audience. 
+                             I aim to blur the line between choreography and instinct, crafting moments that feel raw, honest, and deeply human.
+                    </p>
+                    <h6 class="inter-font">BASED IN NYC.</h6>
+                </div>
+            </div>
+        </div>
 
 
-	<br><br><br><br>
-	<div class="container heading-space-3">
-		<div class="row">
-			<div class="container">
-				<img class="main-img" style="width: 100%;" src="img/main/Screenshot 2025-05-26 at 11.54.37 PM.png">
-			</div>
-			<div class="col-lg-4"><i><h6>Beginnings</h6></i></div>
-			<div class="col-lg-6"><h5>Trained in hip-hop, street styles, qi gong, and contemporary dance,
-				 I’ve developed a holistic approach to movement that weaves in breathwork, visualization, and method acting.
-				</h5></div>
-			<div class="w-100"></div>
-			<div class="col-lg-4"><i><h6>Experimenting</h6></i></div>
-			<div class="col-lg-6"><h5>Exploring new local music that inspires a continual flow in movement, one with no stops - spotify: broomnyc.</h5></div>
-			<div class="w-100"></div>
-			<div class="col-lg-4"><i><h6>Previously</h6></i></div>
-			<div class="col-lg-6">
-				<h5>Co-created Forest, a live interpretive stage show about the deterioration of the planet, exploring elements of earth, air, water, and fire. Created with Kinaj and Shameka Blake.
-				</h5>
-			</div>
-		  </div>
-	</div>
+        <div class="container heading-space-3">
+            <div class="row justify-content-end">
+                <div class="col-md-4"></div>
+                <div class="col-md-6">
+                    <p class="inter-font">
+                        My mission is to turn emotion into motion—creating spaces where structure fades and pure feeling remains.
+                    </p>
+                </div>
+            </div>
+        </div>
 
-	<br><br>
-	
-	<a href="#page-top" class="cd-top">Top</a>
-	<br><br><br><br>
-	<br><br><br><br>
-	<br><br><br><br>
+        <div class="container heading-space-2 heading-space-3">
+            <div class="row justify-content-start">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-6">
+                    <p class="inter-font">Currently focused on capturing meaningful stories through film and engaging a community of mindful movers and storytellers.</p>
+                </div>
+            </div>
+        </div>
 
 
+        <br><br><br><br>
+        <div class="container heading-space-3">
+            <div class="row">
+                <div class="col-lg-4"><i><h6 class="inter-font">Beginnings</h6></i></div>
+                <div class="col-lg-6"><h5 class="inter-font">Trained in hip-hop, street styles, qi gong, and contemporary dance,
+                        I've developed a holistic approach to movement that weaves in breathwork, visualization, and method acting.
+                    </h5></div>
+                <div class="w-100"></div>
+                <div class="col-lg-4"><i><h6 class="inter-font">Experimenting</h6></i></div>
+                <div class="col-lg-6"><h5 class="inter-font">Exploring new local music that inspires a continual flow in movement, one with no stops - spotify: broomnyc.</h5></div>
+                <div class="w-100"></div>
+                <div class="col-lg-4"><i><h6 class="inter-font">Previously</h6></i></div>
+                <div class="col-lg-6">
+                    <h5 class="inter-font">Co-created Forest, a live interpretive stage show about the deterioration of the planet, exploring elements of earth, air, water, and fire. Created with Kinaj and Shameka Blake.
+                    </h5>
+                </div>
+              </div>
+        </div>
+    </main>
 
     <!-- script -->
     <script src="js/jquery.js"></script>

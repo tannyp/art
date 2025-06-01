@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>TANJOT PANESAR</title>
+    <title>____</title>
 
     <!-- Css -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -18,81 +18,368 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+	<style>
+		.header-section {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: white;
+			z-index: 1000;
+			border: none;
+		}
+
+		.navbar-default {
+			background: transparent;
+			border: none;
+			margin: 0;
+			padding: 20px 0;
+			width: 100%;
+		}
+
+		.navbar-nav > li > a {
+			padding: 0;
+			text-decoration: none;
+		}
+
+		.navbar-nav > li > a h6.inter-font {
+			margin: 0;
+			font-family: 'Inter', sans-serif;
+			font-size: 11px;
+			font-weight: 400;
+			text-transform: none;
+			letter-spacing: normal;
+			color: black;
+		}
+
+		.nav.navbar-nav.navbar-right {
+			display: flex;
+			align-items: center;
+			gap: 25px;
+			margin-right: 0 !important;
+			float: right !important;
+		}
+
+		.container {
+			padding-right: 30px;
+			padding-left: 30px;
+			width: 100%;
+			max-width: none;
+		}
+
+		.navbar-collapse {
+			padding-right: 0;
+		}
+
+		.navbar-header {
+			float: right;
+		}
+
+		.main-content {
+			margin-top: 100px;
+			min-height: calc(100vh - 200px);
+			display: flex;
+			align-items: center;
+		}
+
+		/* Font styles matching other pages */
+		body {
+			font-family: 'Lora', serif;
+		}
+
+		h4, h5, h6 {
+			font-family: 'Lora', serif;
+			font-weight: 400;
+			line-height: 1.4;
+		}
+
+		.contactTable {
+			margin-bottom: 20px;
+		}
+
+		.contactTable a {
+			font-family: 'Lora', serif;
+			font-size: 16px;
+			line-height: 1.7;
+			color: #000;
+			text-decoration: none;
+			transition: opacity 0.2s ease;
+		}
+
+		.contactTable a:hover {
+			opacity: 0.7;
+		}
+
+		.copy-email-btn {
+			font-family: 'Inter', sans-serif;
+			font-size: 11px;
+			font-weight: 400;
+			background: none;
+			border: 1px solid #ddd;
+			border-radius: 20px;
+			padding: 8px 16px;
+			margin-top: 10px;
+			color: #666;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.copy-email-btn:hover {
+			background: #f5f5f5;
+			color: #000;
+			border-color: #999;
+		}
+
+		.heading-space-3 {
+			margin-top: 60px;
+		}
+
+		.heading-space-3 h6 {
+			font-family: 'Inter', sans-serif;
+			font-size: 11px;
+			font-weight: 400;
+			letter-spacing: 1px;
+			color: #666;
+			margin-bottom: 10px;
+		}
+
+		.heading-space-3 h5 {
+			font-family: 'Lora', serif;
+			font-size: 16px;
+			line-height: 1.7;
+			font-weight: 400;
+			color: #333;
+			margin-bottom: 30px;
+		}
+
+		.heading-space-2 {
+			margin-top: 40px;
+		}
+
+		.heading-space-3 .row > div {
+			margin-bottom: 30px;
+		}
+
+		/* Clean up the contact table layout */
+		.contactTable {
+			padding: 20px 0;
+			border: none;
+		}
+
+		.contactTable p {
+			margin: 0;
+			font-family: 'Lora', serif;
+		}
+
+		.contact-wrapper {
+			max-width: 600px;
+			margin: 0 auto;
+			padding: 40px;
+			text-align: center;
+			background: rgba(255, 255, 255, 0.9);
+			border-radius: 8px;
+		}
+
+		.contact-item {
+			margin-bottom: 40px;
+			padding: 20px;
+			transition: transform 0.2s ease;
+		}
+
+		.contact-item:hover {
+			transform: translateY(-2px);
+		}
+
+		.contact-link {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-decoration: none;
+			color: #000;
+			transition: opacity 0.2s ease;
+		}
+
+		.contact-link:hover {
+			opacity: 0.7;
+			text-decoration: none;
+			color: #000;
+		}
+
+		.contact-label {
+			font-family: 'Inter', sans-serif;
+			font-size: 12px;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			margin-bottom: 8px;
+			color: #666;
+		}
+
+		.contact-text {
+			font-family: 'Lora', serif;
+			font-size: 20px;
+			font-weight: 400;
+			color: #000;
+		}
+
+		.representation {
+			margin-top: 60px;
+			padding-top: 30px;
+			border-top: 1px solid #eee;
+		}
+
+		.representation p {
+			font-family: 'Lora', serif;
+			font-size: 14px;
+			font-style: italic;
+			color: #666;
+			margin: 0;
+			line-height: 1.6;
+		}
+
+		/* Main image styling */
+		.main-img {
+			margin-bottom: 60px;
+		}
+
+		/* Text styles */
+		.intro-text {
+			font-family: 'Lora', serif;
+			font-size: 16px;
+			line-height: 1.7;
+			margin-bottom: 20px;
+			color: #333;
+		}
+
+		/* Location text */
+		.heading-space-1 h6 {
+			font-family: 'Inter', sans-serif;
+			font-size: 11px;
+			font-weight: 400;
+			letter-spacing: 1px;
+			color: #666;
+			margin-top: 20px;
+		}
+
+		/* Mission statement */
+		.heading-space-3 p {
+			font-family: 'Lora', serif;
+			font-size: 16px;
+			line-height: 1.7;
+			color: #333;
+			margin-bottom: 40px;
+		}
+
+		/* Responsive adjustments */
+		@media (max-width: 768px) {
+			.contact-wrapper {
+				padding: 20px;
+			}
+
+			.contact-text {
+				font-size: 18px;
+			}
+
+			.contact-item {
+				margin-bottom: 30px;
+				padding: 15px;
+			}
+
+			.main-content {
+				margin-top: 80px;
+			}
+
+			.main-img {
+				width: 100% !important;
+				margin-bottom: 40px;
+			}
+
+			.intro-text, 
+			.heading-space-3 p,
+			.heading-space-3 h5 {
+				font-size: 15px;
+			}
+
+			.heading-space-3 {
+				margin-top: 40px;
+			}
+		}
+	</style>
 </head>
 
 <body>
 
-	<nav class="navbar navbar-default ">
+	<!-- Header Section -->
+	<header class="header-section">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<div class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu">	
+						<span class="bar1"></span>
+						<span class="bar2"></span>
+						<span class="bar3"></span>
+				  </div>
+				</div>
+
+				<div class="collapse navbar-collapse" id="main-menu">
+				   <ul class="nav navbar-nav navbar-right">
+					<li><a href="index.html"><h6 class="inter-font">Methodology</h6></a></li>
+					<li><a href="work.html"><h6 class="inter-font">Movement Direction</h6></a></li>
+					<li><a href="program.html"><h6 class="inter-font">Mindfulness</h6></a></li>
+					<li><a href="contact.html"><h6 class="inter-font">More</h6></a></li>
+
+				  </ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+	</header>
+
+	<!-- Main Content Section -->
+	<main class="main-content">
 		<div class="container">
-			<div class="navbar-header">
-				<div class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu">	
-					<span class="bar1"></span>
-					<span class="bar2"></span>
-					<span class="bar3"></span>
-			  </div>
-			  <a href="index.html"><h4 class="title-spacing">Tanjot Panesar</h4></a>
+			<div class="contact-wrapper">
+				<!-- Email Section -->
+				<div class="contact-item">
+					<a class="contact-link" href="mailto:tanjotspanesar@gmail.com" id="a1">
+						<span class="contact-label">Email</span>
+						<span class="contact-text">tanjotspanesar@gmail.com</span>
+					</a>
+					<button class="copy-email-btn" onclick="copyToC()">COPY TO CLIPBOARD</button>
+				</div>
 
-			</div>
+				<!-- Instagram Section -->
+				<div class="contact-item">
+					<a class="contact-link" target="_blank" href="https://www.instagram.com/tanjot.p/">
+						<span class="contact-label">Instagram</span>
+						<span class="contact-text">@tanjot.p</span>
+					</a>
+				</div>
 
-			<div class="collapse navbar-collapse" id="main-menu">
-			   <ul class="nav navbar-nav navbar-right">
-				<li><a href="work.html"><h6 class="inter-font">WORK</h6></a></li>
-				<li><a href="class.html"><h6 class="inter-font">CLASS</h6></a></li>
-				<li><a href="contact.html"><h6 class="inter-font">CONTACT</h6></a></li>
-			  </ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
-	</nav>
-  
+				<!-- YouTube Section -->
+				<div class="contact-item">
+					<a class="contact-link" target="_blank" href="https://www.youtube.com/c/TanjotPanesarsVideos/playlists">
+						<span class="contact-label">YouTube</span>
+						<span class="contact-text">Tanjot Panesar</span>
+					</a>
+				</div>
 
-	<br><br><br><br>
-
-	<div class="container">
-		<div class="col-lg-6">
-			<img class="main-img" src="img/main/TanjotP199131.jpg">
-		</div>
-		<br>
-		<td class="col-md-3 contactTable">
-			<a class="hire-me-link-black" href="mailto:abc@gmail.com" id="a1">Email: tanjotspanesar@gmail.com</a>
-			<button class="copy-email-btn" onclick="copyToC()" >COPY TO CLIPBOARD</button>
-		 </td>	
-		 <td class="col-md-3 contactTable">
-			<a class="hire-me-link-black" target="_blank" href="https://www.instagram.com/tanny.p/"><p>Instagram: @tanny.p</p></a>
-		 </td>	
-		 <td class="col-md-3 contactTable">
-			<a class="hire-me-link-black" target="_blank" href="https://www.youtube.com/c/TanjotPanesarsVideos/playlists"><p>YouTube</p></a>
-		 </td>	
-		 <div class="container heading-space-3">
-			<div class="row">
-				<div class="col-lg-4"><i><h6>represented by da Costa Talent - Andrew 'Pyro' Chung.</h6></i></div>
-				<div class="col-lg-6"><h5></h5></div>
+				<!-- Representation Section -->
+				<div class="representation">
+					<p>represented by da Costa Talent - Frank Da Costa</p>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	
+		<a href="#page-top" class="cd-top">Top</a>
+	</main>
 
-	<br><br><br><br>
-	
-
-	<br><br>
-	
-	<a href="#page-top" class="cd-top">Top</a>
-	<br><br><br><br>
-	<br><br><br><br>
-	<br><br><br><br>
-
-
-
-    <!-- script -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+	<!-- Scripts -->
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 	<script src="js/modernizr.js"></script>
 	<script src="js/script.js"></script>
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-	
 
 </body>
 </html>
