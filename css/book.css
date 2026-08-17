@@ -14,11 +14,11 @@
 
 * { box-sizing: border-box; }
 
-html { background: var(--table); }
+html { background: var(--page); }
 
 body {
     margin: 0;
-    background: var(--table);
+    background: var(--page);
     color: var(--ink);
     font-family: 'Lora', serif;
     font-size: 16px;
@@ -41,51 +41,34 @@ body::after {
 a { color: inherit; text-decoration: none; }
 
 /* --- spreads --------------------------------------------------------------- */
+/* one continuous sheet — no binding, no page edges */
 .book {
-    padding: clamp(16px, 3vw, 56px) clamp(12px, 3vw, 48px) 120px;
+    padding: clamp(40px, 6vh, 90px) 0 clamp(60px, 10vh, 140px);
+    max-width: 1560px;
+    margin: 0 auto;
 }
 
 .spread {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    max-width: 1560px;
-    margin: 0 auto clamp(18px, 3vw, 44px);
-    background: var(--page);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 18px 46px rgba(0, 0, 0, 0.09);
+    column-gap: clamp(24px, 4vw, 96px);
     position: relative;
-}
-
-/* the spine */
-.spread::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 42px;
-    transform: translateX(-50%);
-    pointer-events: none;
-    background: linear-gradient(90deg,
-        rgba(22, 21, 15, 0) 0%,
-        rgba(22, 21, 15, 0.05) 42%,
-        rgba(22, 21, 15, 0.1) 50%,
-        rgba(22, 21, 15, 0.05) 58%,
-        rgba(22, 21, 15, 0) 100%);
+    padding: 0 clamp(18px, 3vw, 56px);
 }
 
 .page {
     position: relative;
-    aspect-ratio: 3 / 4;
-    padding: var(--pad);
+    padding: 0 0 clamp(56px, 9vh, 130px);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    min-height: 0;
 }
 
 /* --- running head / folio -------------------------------------------------- */
 .run {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     gap: 12px;
     font-family: 'Inter', sans-serif;
     font-size: 8px;
@@ -120,23 +103,23 @@ a { color: inherit; text-decoration: none; }
 
 .plate:hover img { opacity: 0.82; }
 
-/* one image filling the page block */
+/* a plate holds its own proportion on a continuous sheet */
 .plate--full {
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
 }
+
+.plate--full img { aspect-ratio: 4 / 5; }
 
 /* cluster: 2 columns, blocks placed with deliberate voids */
 .cluster {
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    gap: clamp(8px, 1.2vw, 18px);
+    grid-auto-rows: 1fr;
+    gap: clamp(10px, 1.4vw, 22px);
 }
 
-.cluster .plate { height: 100%; }
+.cluster .plate img { aspect-ratio: 4 / 5; }
 
 .c-a { grid-area: 1 / 1; }
 .c-b { grid-area: 2 / 1; }
@@ -257,11 +240,11 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cover__imprint {
-    position: absolute;
-    left: var(--pad);
-    right: var(--pad);
-    bottom: var(--pad);
     display: flex;
+    align-self: stretch;
+    width: 100%;
+    gap: 16px;
+    margin-top: clamp(24px, 4vh, 60px);
     justify-content: space-between;
     font-family: 'Inter', sans-serif;
     font-size: 8px;
@@ -308,8 +291,7 @@ a { color: inherit; text-decoration: none; }
 
 /* --- video plates ---------------------------------------------------------- */
 .reels {
-    flex: 1;
-    min-height: 0;
+    flex: 0 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-auto-rows: 1fr;
@@ -319,8 +301,7 @@ a { color: inherit; text-decoration: none; }
 .reel { display: flex; flex-direction: column; min-height: 0; }
 
 .reel__img {
-    flex: 1;
-    min-height: 0;
+    display: block;
     overflow: hidden;
     background: #111;
     position: relative;
@@ -328,7 +309,7 @@ a { color: inherit; text-decoration: none; }
 
 .reel__img img {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 16 / 10;
     object-fit: cover;
     filter: contrast(1.03) saturate(0.94);
     transition: opacity 0.35s ease;
@@ -347,7 +328,7 @@ a { color: inherit; text-decoration: none; }
 
 /* --- fixed rail ------------------------------------------------------------ */
 .rail {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
@@ -361,7 +342,7 @@ a { color: inherit; text-decoration: none; }
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink-soft);
-    background: linear-gradient(var(--table) 60%, rgba(217, 215, 210, 0));
+    background: linear-gradient(var(--page) 62%, rgba(246, 245, 242, 0));
 }
 
 .rail a:hover { color: var(--ink); }
@@ -408,11 +389,9 @@ a { color: inherit; text-decoration: none; }
 
 .lb__bar button:hover { color: var(--ink); }
 
-/* --- responsive: the book unbinds into single pages ----------------------- */
+/* --- responsive ----------------------------------------------------------- */
 @media (max-width: 860px) {
     .spread { grid-template-columns: 1fr; }
-    .spread::after { display: none; }
-    .page { aspect-ratio: auto; min-height: 78vh; }
-    .page--verso { border-bottom: 1px solid var(--rule); }
+    .page { padding-bottom: clamp(40px, 7vh, 80px); }
     .cols { column-count: 1; text-align: left; }
 }
