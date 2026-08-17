@@ -1,0 +1,543 @@
+/* ==========================================================================
+   editorial.css — grid / grain / space layer
+   loaded after style.css; overrides the carousel-era look
+   ========================================================================== */
+
+:root {
+    --paper: #f3f1ec;
+    --paper-warm: #eae6de;
+    --ink: #16140f;
+    --ink-soft: #6f6a61;
+    --ink-faint: #b3ada2;
+    --rule: rgba(22, 20, 15, 0.12);
+    --gut: clamp(18px, 4vw, 56px);
+}
+
+html {
+    background: var(--paper);
+}
+
+body {
+    background: var(--paper);
+    color: var(--ink);
+    padding-top: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- film grain over everything -------------------------------------------- */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.22;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='0.55'/></svg>");
+    background-size: 180px 180px;
+}
+
+/* --- type ------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lora', serif;
+    font-weight: 300;
+    color: var(--ink);
+}
+
+.eyebrow,
+.proj__meta h6,
+.film-credits h6 {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    line-height: 2;
+    margin: 0;
+}
+
+.proj__meta h6 i,
+.film-credits h6 i,
+.proj__meta h6 em {
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+}
+
+/* --- nav ------------------------------------------------------------------- */
+.navbar.navbar-default,
+.header-section .navbar-default {
+    background: transparent;
+    border: 0;
+    margin: 0;
+    padding: 28px 0 0;
+    min-height: 0;
+}
+
+.header-section {
+    background: transparent !important;
+    backdrop-filter: blur(6px);
+}
+
+.nav.navbar-nav.navbar-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 22px;
+}
+
+.navbar-nav > li > a {
+    padding: 0 !important;
+    background: none !important;
+}
+
+.navbar-nav > li > a h6 {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0;
+    transition: color 0.25s ease;
+}
+
+.navbar-nav > li > a:hover h6 {
+    color: var(--ink);
+}
+
+/* --- page shell ------------------------------------------------------------ */
+.container {
+    width: 100%;
+    max-width: 1560px;
+    padding-left: var(--gut);
+    padding-right: var(--gut);
+}
+
+.page-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding: clamp(80px, 14vh, 190px) 0 clamp(48px, 8vh, 110px);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: clamp(56px, 9vh, 130px);
+}
+
+.page-head h1 {
+    font-size: clamp(28px, 4.4vw, 62px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.page-head .eyebrow {
+    flex: 0 0 auto;
+}
+
+/* --- project block: meta left, images right ------------------------------- */
+.proj {
+    display: grid;
+    grid-template-columns: minmax(150px, 2fr) minmax(0, 7fr);
+    gap: clamp(24px, 5vw, 88px);
+    padding-bottom: clamp(90px, 16vh, 210px);
+}
+
+.proj__meta {
+    position: sticky;
+    top: 96px;
+    align-self: start;
+}
+
+.proj__meta h4 {
+    font-size: clamp(17px, 1.5vw, 22px);
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+}
+
+.proj__index {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 18px;
+}
+
+.proj__note {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin: 18px 0 0;
+    max-width: 30ch;
+}
+
+.proj__more {
+    display: inline-block;
+    margin-top: 22px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    cursor: pointer;
+    background: none;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+}
+
+.proj__more:hover {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+}
+
+/* --- the grid ------------------------------------------------------------- */
+.figs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: clamp(14px, 2.2vw, 34px);
+    align-items: start;
+}
+
+.fig {
+    position: relative;
+    margin: 0;
+    grid-column: span 3;
+    cursor: zoom-in;
+}
+
+/* layout variants — mix these for asymmetry */
+.fig--wide  { grid-column: span 4; }
+.fig--full  { grid-column: span 6; }
+.fig--third { grid-column: span 2; }
+.fig--drop  { margin-top: clamp(28px, 6vw, 90px); }
+.fig--rise  { margin-top: clamp(18px, 3vw, 48px); }
+
+.fig img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: contrast(1.03) saturate(0.94);
+    transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+    background: var(--paper-warm);
+}
+
+.fig--crop img {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+}
+
+.fig--pano img {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+}
+
+.fig:hover img {
+    opacity: 0.88;
+}
+
+/* plate caption — centred under the image, letterspaced caps */
+.fig__cap {
+    font-family: 'Lora', serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--ink-soft);
+    margin-top: 14px;
+}
+
+.fig__cap em,
+.fig__cap i {
+    display: block;
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.6;
+}
+
+/* --- book furniture -------------------------------------------------------- */
+.book-cols {
+    column-count: 2;
+    column-gap: clamp(24px, 3.4vw, 54px);
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+.book-cols p {
+    margin: 0 0 1em;
+}
+
+.book-cols p:first-of-type::first-letter {
+    font-size: 2.6em;
+    line-height: 0.9;
+    float: left;
+    padding: 4px 8px 0 0;
+    font-weight: 400;
+}
+
+/* a labelled note row — small caps label above, serif text below */
+.book-note {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) minmax(0, 4fr);
+    gap: 8px clamp(20px, 4vw, 60px);
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--rule);
+}
+
+.book-note:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.book-note p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.book-note a {
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+}
+
+.book-note a:hover {
+    border-bottom-color: var(--ink);
+}
+
+.plate {
+    max-width: 62%;
+    margin: 0 auto clamp(28px, 5vh, 64px);
+}
+
+.plate img {
+    width: 100%;
+    display: block;
+}
+
+.folio {
+    display: block;
+    text-align: center;
+    font-family: 'Lora', serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    padding: 40px 0 clamp(48px, 8vh, 90px);
+}
+
+.rule {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 0;
+}
+
+@media (max-width: 700px) {
+    .book-cols { column-count: 1; text-align: left; }
+    .plate { max-width: 100%; }
+}
+
+/* hairline between projects */
+.proj + .proj {
+    border-top: 1px solid var(--rule);
+    padding-top: clamp(56px, 9vh, 120px);
+}
+
+/* --- reveal on scroll ----------------------------------------------------- */
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.is-in {
+    opacity: 1;
+    transform: none;
+}
+
+/* --- lightbox ------------------------------------------------------------- */
+.lb {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    background: rgba(18, 17, 13, 0.94);
+    padding: 4vh 4vw;
+}
+
+.lb.is-open {
+    display: flex;
+    flex-direction: column;
+}
+
+.lb__stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+.lb__stage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: contrast(1.03) saturate(0.94);
+}
+
+.lb__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(243, 241, 236, 0.6);
+}
+
+.lb__bar button {
+    background: none;
+    border: 0;
+    color: rgba(243, 241, 236, 0.6);
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.lb__bar button:hover {
+    color: #f3f1ec;
+}
+
+/* --- films ---------------------------------------------------------------- */
+.film-entry {
+    display: grid;
+    grid-template-columns: minmax(150px, 2fr) minmax(0, 7fr);
+    gap: clamp(24px, 5vw, 88px);
+    padding-bottom: clamp(90px, 16vh, 200px);
+}
+
+.film-entry + .film-entry {
+    border-top: 1px solid var(--rule);
+    padding-top: clamp(56px, 9vh, 120px);
+}
+
+.film-still {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    filter: contrast(1.03) saturate(0.94);
+}
+
+/* --- index / methodology -------------------------------------------------- */
+.intro-text {
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.75;
+}
+
+.main-img {
+    filter: contrast(1.03) saturate(0.94);
+    max-width: 360px !important;
+    width: 100% !important;
+}
+
+/* --- videos grid ---------------------------------------------------------- */
+.video-thumb-grid {
+    max-width: none;
+    padding: 0;
+    gap: clamp(18px, 3vw, 44px) clamp(14px, 2.2vw, 34px);
+}
+
+.video-thumb-image {
+    border-radius: 0;
+    background: var(--paper-warm);
+}
+
+.video-thumb-image img {
+    filter: contrast(1.03) saturate(0.94);
+}
+
+.video-thumb-caption h4 {
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+
+.video-thumb-caption h6 {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-style: normal;
+}
+
+/* --- tabs ----------------------------------------------------------------- */
+.section-tabs {
+    border-bottom: 1px solid var(--rule);
+    gap: 22px;
+    margin-bottom: clamp(40px, 7vh, 90px);
+}
+
+.section-tab {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.section-tab.active {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 11px;
+    margin-bottom: -13px;
+}
+
+/* --- footer / misc -------------------------------------------------------- */
+.cd-top {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+/* --- responsive ----------------------------------------------------------- */
+@media (max-width: 900px) {
+    .proj,
+    .film-entry {
+        grid-template-columns: 1fr;
+        gap: 26px;
+    }
+
+    .proj__meta {
+        position: static;
+    }
+
+    .fig--rise { margin-top: 0; }
+    .fig--drop { margin-top: 0; }
+    .fig,
+    .fig--wide,
+    .fig--third { grid-column: span 3; }
+    .fig--full { grid-column: span 6; }
+}
+
+@media (max-width: 560px) {
+    .figs { gap: 12px; }
+    .fig, .fig--wide, .fig--third, .fig--full { grid-column: span 6; }
+}
