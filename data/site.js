@@ -45,24 +45,12 @@ window.__SITE__ = {
       "title": "Adam & Eve — Élan Vital"
     },
     {
-      "id": "THHDiEUbmhY",
-      "title": "Origins"
-    },
-    {
-      "id": "OoUdl4DOD_k",
-      "title": "Birds"
-    },
-    {
       "id": "roZvb719U-A",
       "title": "Zenobia Pay"
     },
     {
       "id": "emM658gB6QU",
       "title": "Universe"
-    },
-    {
-      "id": "RbSySn7zrIY",
-      "title": "We're losing the moon"
     },
     {
       "id": "H63pG7Bw02Y",
