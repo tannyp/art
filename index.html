@@ -4,319 +4,166 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Zephyr, Volume I — Tanjot Panesar. Movement, choreography, film.">
+    <meta name="description" content="Tanjot Panesar — movement direction, choreography, film. New York.">
+    <title>Tanjot Panesar</title>
 
-    <title>Zephyr &mdash; Volume I</title>
-
+    <!-- preconnect for fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
-    <link href="css/book.css" rel="stylesheet">
+    <!-- dns-prefetch for YouTube thumbnails -->
+    <link rel="dns-prefetch" href="//img.youtube.com">
+    <link rel="preconnect" href="https://img.youtube.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Lora:ital,wght@0,400;1,400&family=Inter:wght@400&display=swap" rel="stylesheet">
+    <link href="css/portfolio.css" rel="stylesheet">
+
+    <!-- hero preload set dynamically by main.js once work.json is known -->
 </head>
 
 <body>
 
-<div class="rail">
-    <a href="#cover">Zephyr &middot; Tanjot Panesar</a>
-    <span class="rail__mid">
-        <a href="#directory">Directory</a>
-        <a href="#stills">I Stills</a>
-        <a href="#videos">II Videos</a>
-        <a href="#films">III Films</a>
-        <a href="#methodology">IV Methodology</a>
-    </span>
-    <span>Volume I</span>
+<nav class="nav" id="top">
+    <a class="nav__name" href="#top">Tanjot Panesar</a>
+    <div class="nav__links">
+        <a href="#work">Work</a>
+        <a href="#video">Video</a>
+        <a href="#film">Film</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
+
+<div class="site">
+
+    <!-- ── Work ── (built by main.js from data/work.json) -->
+    <section id="work">
+        <div class="work-grid" id="workGrid"></div>
+    </section>
+
+    <!-- ── Video ── -->
+    <section id="video">
+        <p class="section-label">Video</p>
+        <div class="video-grid">
+
+            <div class="video-card" data-vid="-g1zhlK6o7Q">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/-g1zhlK6o7Q/hqdefault.jpg" src="" alt="Adam & Eve — Élan Vital">
+                </div>
+                <span class="video-card__cap">Adam &amp; Eve — Élan Vital</span>
+            </div>
+
+            <div class="video-card" data-vid="THHDiEUbmhY">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/THHDiEUbmhY/hqdefault.jpg" src="" alt="Origins">
+                </div>
+                <span class="video-card__cap">Origins</span>
+            </div>
+
+            <div class="video-card" data-vid="OoUdl4DOD_k">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/OoUdl4DOD_k/hqdefault.jpg" src="" alt="Birds">
+                </div>
+                <span class="video-card__cap">Birds</span>
+            </div>
+
+            <div class="video-card" data-vid="roZvb719U-A">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/roZvb719U-A/hqdefault.jpg" src="" alt="Zenobia Pay">
+                </div>
+                <span class="video-card__cap">Zenobia Pay</span>
+            </div>
+
+            <div class="video-card" data-vid="emM658gB6QU">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/emM658gB6QU/hqdefault.jpg" src="" alt="Universe">
+                </div>
+                <span class="video-card__cap">Universe</span>
+            </div>
+
+            <div class="video-card" data-vid="RbSySn7zrIY">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/RbSySn7zrIY/hqdefault.jpg" src="" alt="We're losing the moon">
+                </div>
+                <span class="video-card__cap">We're losing the moon</span>
+            </div>
+
+            <div class="video-card" data-vid="H63pG7Bw02Y">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/H63pG7Bw02Y/hqdefault.jpg" src="" alt="Session">
+                </div>
+                <span class="video-card__cap">Session</span>
+            </div>
+
+            <div class="video-card" data-vid="5SLcslBjjlI">
+                <div class="video-card__thumb">
+                    <img class="lazy" data-src="https://img.youtube.com/vi/5SLcslBjjlI/hqdefault.jpg" src="" alt="Testimonial">
+                </div>
+                <span class="video-card__cap">Testimonial</span>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── Film ── -->
+    <section id="film">
+        <p class="section-label">Film</p>
+        <!-- built by main.js from data/film.json -->
+        <div class="film-grid" id="filmGrid"></div>
+    </section>
+
+    <!-- ── Contact ── -->
+    <section id="contact">
+        <p class="section-label">Contact</p>
+        <div class="contact-wrap">
+            <div class="methodology">
+                <p>I build movement from a foundation of mindfulness and presence. Through breath,
+                    stillness, and intentional motion, I translate colour, mood, and abstract ideas
+                    into physical language.</p>
+                <p>My work explores emotional extremes — using striking shapes and intense
+                    physicality to create a visceral connection with the audience. Blurring the
+                    line between choreography and instinct, crafting moments that feel raw, honest,
+                    and deeply human.</p>
+                <p>Trained in hip-hop, street styles, qi gong, and contemporary dance.</p>
+            </div>
+            <dl class="contact-list">
+                <div>
+                    <dt>Email</dt>
+                    <dd><a href="mailto:tanjotspanesar@gmail.com">tanjotspanesar@gmail.com</a></dd>
+                </div>
+                <div>
+                    <dt>Instagram</dt>
+                    <dd><a href="https://www.instagram.com/tanjot.p/" target="_blank" rel="noopener noreferrer">@tanjot.p</a></dd>
+                </div>
+                <div>
+                    <dt>YouTube</dt>
+                    <dd><a href="https://www.youtube.com/c/TanjotPanesarsVideos/playlists" target="_blank" rel="noopener noreferrer">Tanjot Panesar</a></dd>
+                </div>
+                <div>
+                    <dt>Representation</dt>
+                    <dd>da Costa Talent — Frank Da Costa</dd>
+                </div>
+                <div>
+                    <dt>Based</dt>
+                    <dd>New York, US</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+
 </div>
 
-<div class="book">
-    <section class="spread" id="cover">
-        <div class="page page--verso cover">
-            <div class="body cover">
-                <span class="cover__first">movement · choreography · film</span>
-            </div>
-            <div class="cover__imprint"><span>New York</span><span>MMXXVI</span></div>
-        </div>
-        <div class="page page--recto cover">
-            <div class="body cover">
-                <span class="cover__first">tanjot</span>
-                <span class="cover__name">zephyr</span>
-                <span class="cover__last">panesar</span>
-            </div>
-            <div class="cover__imprint"><span>Volume I</span><span>Edition of one</span></div>
-        </div>
-    </section>
-    <section class="spread" id="directory">
-        <div class="page page--verso">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>02</span></div>
-            <div class="body">
-                <p class="chapter-no">Directory</p>
-                <h2 class="chapter-title">Contents</h2>
-                <nav class="toc">
-                    <a href="#stills"><span class="toc__no">I</span><span class="toc__name">Stills<span class="toc__sub">Masked Man · Darmat · Lotus · Universe</span></span><span class="toc__folio">04</span></a>
-                    <a href="#videos"><span class="toc__no">II</span><span class="toc__name">Videos<span class="toc__sub">Stage · Commercial · Solo</span></span><span class="toc__folio">12</span></a>
-                    <a href="#films"><span class="toc__no">III</span><span class="toc__name">Films<span class="toc__sub">Movement direction for camera</span></span><span class="toc__folio">14</span></a>
-                    <a href="#methodology"><span class="toc__no">IV</span><span class="toc__name">Methodology<span class="toc__sub">Practice · Notes · Contact</span></span><span class="toc__folio">18</span></a>
-                </nav>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>Directory</span><span>03</span></div>
-            <div class="body">
-                <p class="lede">Emotion into motion. Breath, stillness, and intentional
-                    motion translating colour and mood into physical language.</p>
-                <div style="flex:1"></div>
-                <dl class="note"><dt>Volume</dt><dd>I — collected work, 2021&ndash;2026</dd></dl>
-                <dl class="note"><dt>Reading</dt><dd>Arrow keys move between sections. Any plate opens full size.</dd></dl>
-            </div>
-        </div>
-    </section>
-    <section class="spread" id="stills">
-        <div class="page page--verso">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>04</span></div>
-            <div class="body">
-                <p class="chapter-no">Chapter I</p>
-                <h2 class="chapter-title">Stills</h2>
-                <p class="lede">Frames pulled from the roll — a body learning its own shape
-                    in the dark, and in the field.</p>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>I · Stills</span><span>05</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/masked-man/005087540004.jpg" alt="Masked Man" loading="lazy">
-                </figure>
-                <figcaption class="caption">Masked Man &mdash; Frame 04 <em>Movement direction, 35mm</em></figcaption>
-            </div>
-        </div>
-    </section>
-    <section class="spread">
-        <div class="page page--verso">
-            <div class="run"><span>I · Stills</span><span>06</span></div>
-            <div class="body">
-                <div class="cluster">
-                    <figure class="plate c-a"><img src="img/masked-man/005087540011.jpg" alt="Masked Man 11" loading="lazy"></figure>
-                    <figure class="plate c-b"><img src="img/masked-man/005087540008.jpg" alt="Masked Man 08" loading="lazy"></figure>
-                    <figure class="plate c-c"><img src="img/masked-man/005087540018.jpg" alt="Masked Man 18" loading="lazy"></figure>
-                    <figure class="plate c-d"><img src="img/masked-man/005087540021.jpg" alt="Masked Man 21" loading="lazy"></figure>
-                    <figure class="plate c-e"><img src="img/masked-man/005087540002.jpg" alt="Masked Man 02" loading="lazy"></figure>
-                </div>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>I · Stills</span><span>07</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/masked-man/005087540014.jpg" alt="Masked Man" loading="lazy">
-                </figure>
-                <figcaption class="caption">Masked Man &mdash; Frames 02&ndash;21 <em>Contact sheet</em></figcaption>
-            </div>
-        </div>
-    </section>
-    <section class="spread">
-        <div class="page page--verso">
-            <div class="run"><span>I · Stills</span><span>08</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/akash/IMG-4273.jpg" alt="Darmat" loading="lazy">
-                </figure>
-                <figcaption class="caption">Darmat (be not afraid) <em>Akash Tucker &middot; Kaj &middot; Toronto</em></figcaption>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>I · Stills</span><span>09</span></div>
-            <div class="body">
-                <div class="cluster">
-                    <figure class="plate c-a"><img src="img/akash/IMG-4271.jpg" alt="Darmat 2" loading="lazy"></figure>
-                    <figure class="plate c-f"><img src="img/akash/IMG-4272.jpg" alt="Darmat 3" loading="lazy"></figure>
-                    <figure class="plate c-b"><img src="img/kaj/58F38497-A76D-4B80-A835-CC515E783840.JPG" alt="Lotus 1" loading="lazy"></figure>
-                    <figure class="plate c-d"><img src="img/kaj/7300742C-3542-48F8-BC46-AC83C0B3A83B.JPG" alt="Lotus 2" loading="lazy"></figure>
-                    <figure class="plate c-e"><img src="img/kaj/D6E46398-0D4B-458E-9167-E2139ADC66D4.JPG" alt="Lotus 3" loading="lazy"></figure>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="spread">
-        <div class="page page--verso">
-            <div class="run"><span>I · Stills</span><span>10</span></div>
-            <div class="body">
-                <div class="cluster">
-                    <figure class="plate c-a"><img src="img/elan/IMG_2918.JPG" alt="Élan Vital 1" loading="lazy"></figure>
-                    <figure class="plate c-b"><img src="img/elan/IMG_2887.JPG" alt="Élan Vital 2" loading="lazy"></figure>
-                    <figure class="plate c-c"><img src="img/elan/IMG_2889.JPG" alt="Élan Vital 3" loading="lazy"></figure>
-                    <figure class="plate c-d"><img src="img/akash2/IMG_2914.JPG" alt="Portofino 1" loading="lazy"></figure>
-                    <figure class="plate c-e"><img src="img/akash2/IMG_2909.JPG" alt="Portofino 2" loading="lazy"></figure>
-                </div>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>I · Stills</span><span>11</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/universe/DSCF1614-min.JPG" alt="Universe" loading="lazy">
-                </figure>
-                <figcaption class="caption">Universe <em>Gabe Galedo &middot; Gabrielle &middot; Vancouver</em></figcaption>
-            </div>
-        </div>
-    </section>
-    <section class="spread" id="videos">
-        <div class="page page--verso">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>12</span></div>
-            <div class="body">
-                <p class="chapter-no">Chapter II</p>
-                <h2 class="chapter-title">Videos</h2>
-                <p class="lede">Choreography for stage, camera, and commercial work.
-                    Each plate opens on YouTube.</p>
-                <div class="reels">
-                    <a class="reel" href="https://www.youtube.com/watch?v=-g1zhlK6o7Q" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/-g1zhlK6o7Q/hqdefault.jpg" alt="Adam &amp; Eve — Élan Vital" loading="lazy"></span>
-                        <span class="reel__cap">Adam &amp; Eve — Élan Vital &middot; Clothing</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=THHDiEUbmhY" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/THHDiEUbmhY/hqdefault.jpg" alt="Origins" loading="lazy"></span>
-                        <span class="reel__cap">Origins &middot; Stage</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=OoUdl4DOD_k" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/OoUdl4DOD_k/hqdefault.jpg" alt="Birds" loading="lazy"></span>
-                        <span class="reel__cap">Birds &middot; Stage</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=roZvb719U-A" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/roZvb719U-A/hqdefault.jpg" alt="Zenobia Pay" loading="lazy"></span>
-                        <span class="reel__cap">Zenobia Pay &middot; Commercial</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>II · Videos</span><span>13</span></div>
-            <div class="body">
-                <div class="reels">
-                    <a class="reel" href="https://www.youtube.com/watch?v=emM658gB6QU" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/emM658gB6QU/hqdefault.jpg" alt="Universe" loading="lazy"></span>
-                        <span class="reel__cap">Universe &middot; Film festival</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=RbSySn7zrIY" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/RbSySn7zrIY/hqdefault.jpg" alt="We&#39;re losing the moon" loading="lazy"></span>
-                        <span class="reel__cap">We&#39;re losing the moon &middot; Solo</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=H63pG7Bw02Y" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/H63pG7Bw02Y/hqdefault.jpg" alt="Session" loading="lazy"></span>
-                        <span class="reel__cap">Session &middot; Mindfulness</span>
-                    </a>
-                    <a class="reel" href="https://www.youtube.com/watch?v=5SLcslBjjlI" target="_blank" rel="noopener noreferrer">
-                        <span class="reel__img"><img src="https://img.youtube.com/vi/5SLcslBjjlI/hqdefault.jpg" alt="Testimonial" loading="lazy"></span>
-                        <span class="reel__cap">Testimonial &middot; Mindfulness</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="spread" id="films">
-        <div class="page page--verso">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>14</span></div>
-            <div class="body">
-                <p class="chapter-no">Chapter III</p>
-                <h2 class="chapter-title">Films</h2>
-                <p class="lede">Movement direction for camera.</p>
-                <div style="flex:1"></div>
-                <dl class="note"><dt>I</dt><dd>I can&#39;t cross my legs, can you? <em>dir. Thiha Min Zin</em></dd></dl>
-                <dl class="note"><dt>II</dt><dd>Palika&#39;s BFA Thesis Collection <em>Parsons &middot; @dialective.xyz</em></dd></dl>
-                <dl class="note"><dt>III</dt><dd>Masked Man</dd></dl>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>III · Films</span><span>15</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/films/i-cant-cross-my-legs-still.png" alt="I can't cross my legs, can you?" loading="lazy">
-                </figure>
-                <figcaption class="caption">I can&#39;t cross my legs, can you? <em>Director Thiha Min Zin &middot; Movement direction Tanjot Panesar</em></figcaption>
-            </div>
-        </div>
-    </section>
-    <section class="spread">
-        <div class="page page--verso">
-            <div class="run"><span>III · Films</span><span>16</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/films/masked-man-field-still.png" alt="Palika's BFA Thesis Collection" loading="lazy">
-                </figure>
-                <figcaption class="caption">Palika&#39;s BFA Thesis Collection <em>Social Impact Designer of the Year 2026, @parsons_fashion</em></figcaption>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>III · Films</span><span>17</span></div>
-            <div class="body">
-                <figure class="plate plate--full">
-                    <img src="img/films/masked-man-studio-still.png" alt="Masked Man" loading="lazy">
-                </figure>
-                <figcaption class="caption">Masked Man <em>Movement direction Tanjot Panesar</em></figcaption>
-            </div>
-        </div>
-    </section>
-    <section class="spread" id="methodology">
-        <div class="page page--verso">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>18</span></div>
-            <div class="body">
-                <p class="chapter-no">Chapter IV</p>
-                <h2 class="chapter-title">Methodology</h2>
-                <div class="cols">
-                    <p>I build movement from a foundation of mindfulness and presence. Through breath,
-                        stillness, and intentional motion, I translate colour, mood, and abstract ideas
-                        into physical language.</p>
-                    <p>My work often explores emotional extremes &mdash; using striking shapes and intense
-                        physicality to create a visceral connection with the audience. I aim to blur the
-                        line between choreography and instinct, crafting moments that feel raw, honest,
-                        and deeply human.</p>
-                    <p>My mission is to turn emotion into motion: creating spaces where structure fades
-                        and pure feeling remains.</p>
-                </div>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>IV · Methodology</span><span>19</span></div>
-            <div class="body">
-                <dl class="note"><dt>Beginnings</dt><dd>Trained in hip-hop, street styles, qi gong, and
-                    contemporary dance &mdash; a holistic approach weaving breathwork, visualization, and
-                    method acting.</dd></dl>
-                <dl class="note"><dt>Experimenting</dt><dd>New local music that inspires a continual flow in
-                    movement, one with no stops &mdash; spotify: broomnyc.</dd></dl>
-                <dl class="note"><dt>Previously</dt><dd>Co-created <em>Forest</em>, a live interpretive stage
-                    show on the deterioration of the planet &mdash; earth, air, water, fire. With Kinaj and
-                    Shameka Blake.</dd></dl>
-                <dl class="note"><dt>Now</dt><dd>Capturing meaningful stories through film, and engaging a
-                    community of mindful movers and storytellers.</dd></dl>
-            </div>
-        </div>
-    </section>
-    <section class="spread">
-        <div class="page page--verso">
-            <div class="run"><span>Colophon</span><span>20</span></div>
-            <div class="body">
-                <p class="chapter-no">Colophon</p>
-                <h2 class="chapter-title">Contact</h2>
-                <dl class="note"><dt>Email</dt><dd><a href="mailto:tanjotspanesar@gmail.com">tanjotspanesar@gmail.com</a></dd></dl>
-                <dl class="note"><dt>Instagram</dt><dd><a href="https://www.instagram.com/tanjot.p/" target="_blank" rel="noopener noreferrer">@tanjot.p</a></dd></dl>
-                <dl class="note"><dt>YouTube</dt><dd><a href="https://www.youtube.com/c/TanjotPanesarsVideos/playlists" target="_blank" rel="noopener noreferrer">Tanjot Panesar</a></dd></dl>
-                <dl class="note"><dt>Representation</dt><dd><em>da Costa Talent &mdash; Frank Da Costa</em></dd></dl>
-                <dl class="note"><dt>Based</dt><dd>New York, US</dd></dl>
-            </div>
-        </div>
-        <div class="page page--recto">
-            <div class="run"><span>ZEPHYR · VOLUME I</span><span>21</span></div>
-            <div class="body">
-                <div style="flex:1"></div>
-                <p class="caption" style="text-align:center">Zephyr &mdash; Volume I
-                    <em>Tanjot Panesar. Set in Lora and Inter. Plates by Akash Tucker, Gabe Galedo,
-                    Andrew Ye, and others.</em></p>
-                <div style="flex:1"></div>
-                <p class="cover__name" style="font-size:clamp(28px,4.4vw,68px);text-align:center;margin:0">fin</p>
-            </div>
-        </div>
-    </section>
+<footer>
+    <span>Tanjot Panesar</span>
+    <span>New York</span>
+</footer>
+
+<!-- Lightbox -->
+<div class="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <img class="lb__img" src="" alt="">
+    <button class="lb__btn lb__prev" aria-label="Previous">←</button>
+    <button class="lb__btn lb__next" aria-label="Next">→</button>
+    <button class="lb__btn lb__close" aria-label="Close">Close</button>
 </div>
 
-<script src="js/book.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

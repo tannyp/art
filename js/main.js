@@ -1,257 +1,157 @@
-/**
-* Template Name: Personal - v4.10.0
-* Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
-(function() {
-  "use strict";
+/* main.js */
+(function () {
 
-  /**
-   * Easy selector helper function
-   */
-  const select = (el, all = false) => {
-    el = el.trim()
-    if (all) {
-      return [...document.querySelectorAll(el)]
-    } else {
-      return document.querySelector(el)
-    }
+  /* ── Build work grid from data/work.json ───────────────────────────────── */
+  const grid = document.getElementById('workGrid');
+
+  const filmGrid = document.getElementById('filmGrid');
+
+  // the photo curator (curate/server.py) injects unpublished edits here for its preview
+  const draft = window.__CURATE__ || {};
+
+  function load(name) {
+    if (draft[name]) return Promise.resolve(draft[name]);
+    return fetch('data/' + name + '.json').then(r => r.json()).catch(() => []);
   }
 
-  /**
-   * Easy event listener function
-   */
-  const on = (type, el, listener, all = false) => {
-    let selectEl = select(el, all)
+  function buildFilmGrid(films) {
+    films.forEach(f => {
+      const fig = document.createElement('figure');
+      fig.className = 'film-card';
+      const img = document.createElement('img');
+      img.className = 'lazy';
+      img.dataset.src = f.src;
+      img.src = '';
+      img.alt = f.title || '';
+      const cap = document.createElement('figcaption');
+      cap.textContent = f.title || '';
+      if (f.credit) {
+        const em = document.createElement('em');
+        em.textContent = f.credit;
+        cap.appendChild(em);
+      }
+      fig.append(img, cap);
+      filmGrid.appendChild(fig);
+    });
+  }
 
-    if (selectEl) {
-      if (all) {
-        selectEl.forEach(e => e.addEventListener(type, listener))
+  async function buildWorkGrid() {
+    const [images, films] = await Promise.all([load('work'), load('film')]);
+    if (filmGrid) buildFilmGrid(films);
+
+    images.forEach((src, i) => {
+      const fig = document.createElement('figure');
+      const img = document.createElement('img');
+      img.alt = src.split('/').pop().replace(/\.[^.]+$/, '');
+
+      if (i < 3) {
+        img.src = src;
+        img.fetchPriority = 'high';
+      } else if (i < 6) {
+        img.src = src; // eager but no special priority
       } else {
-        selectEl.addEventListener(type, listener)
+        img.className = 'lazy';
+        img.dataset.src = src;
+        img.src = '';
       }
-    }
+
+      fig.appendChild(img);
+      grid.appendChild(fig);
+    });
+
+    // init lazy observer after grid is built
+    initLazy();
+    // init lightbox after grid is built
+    initLightbox();
   }
 
-  /**
-   * Scrolls to an element with header offset
-   */
-  const scrollto = (el) => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    })
-  }
-
-  /**
-   * Mobile nav toggle
-   */
-  on('click', '.mobile-nav-toggle', function(e) {
-    select('#navbar').classList.toggle('navbar-mobile')
-    this.classList.toggle('bi-list')
-    this.classList.toggle('bi-x')
-  })
-
-  /**
-   * Scrool with ofset on links with a class name .scrollto
-   */
-  on('click', '#navbar .nav-link', function(e) {
-    let section = select(this.hash)
-    if (section) {
-      e.preventDefault()
-
-      let navbar = select('#navbar')
-      let header = select('#header')
-      let sections = select('section', true)
-      let navlinks = select('#navbar .nav-link', true)
-
-      navlinks.forEach((item) => {
-        item.classList.remove('active')
-      })
-
-      this.classList.add('active')
-
-      if (navbar.classList.contains('navbar-mobile')) {
-        navbar.classList.remove('navbar-mobile')
-        let navbarToggle = select('.mobile-nav-toggle')
-        navbarToggle.classList.toggle('bi-list')
-        navbarToggle.classList.toggle('bi-x')
-      }
-
-      if (this.hash == '#header') {
-        header.classList.remove('header-top')
-        sections.forEach((item) => {
-          item.classList.remove('section-show')
-        })
-        return;
-      }
-
-      if (!header.classList.contains('header-top')) {
-        header.classList.add('header-top')
-        setTimeout(function() {
-          sections.forEach((item) => {
-            item.classList.remove('section-show')
-          })
-          section.classList.add('section-show')
-
-        }, 350);
-      } else {
-        sections.forEach((item) => {
-          item.classList.remove('section-show')
-        })
-        section.classList.add('section-show')
-      }
-
-      scrollto(this.hash)
-    }
-  }, true)
-  
-// For Live Projects
-window.addEventListener('load',function(){
-  document.querySelector('body').classList.add("loaded")  
-});
-
-  /**
-   * Activate/show sections on load with hash links
-   */
-  window.addEventListener('load', () => {
-    if (window.location.hash) {
-      let initial_nav = select(window.location.hash)
-
-      if (initial_nav) {
-        let header = select('#header')
-        let navlinks = select('#navbar .nav-link', true)
-
-        header.classList.add('header-top')
-
-        navlinks.forEach((item) => {
-          if (item.getAttribute('href') == window.location.hash) {
-            item.classList.add('active')
-          } else {
-            item.classList.remove('active')
-          }
-        })
-
-        setTimeout(function() {
-          initial_nav.classList.add('section-show')
-        }, 350);
-
-        scrollto(window.location.hash)
-      }
-    }
-  });
-
-  /**
-   * Skills animation
-   */
-  let skilsContent = select('.skills-content');
-  if (skilsContent) {
-    new Waypoint({
-      element: skilsContent,
-      offset: '80%',
-      handler: function(direction) {
-        let progress = select('.progress .progress-bar', true);
-        progress.forEach((el) => {
-          el.style.width = el.getAttribute('aria-valuenow') + '%'
-        });
-      }
-    })
-  }
-
-  /**
-   * Testimonials slider
-   */
-  new Swiper('.testimonials-slider', {
-    speed: 600,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false
-    },
-    slidesPerView: 'auto',
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true
-    },
-    breakpoints: {
-      320: {
-        slidesPerView: 1,
-        spaceBetween: 20
-      },
-
-      1200: {
-        slidesPerView: 3,
-        spaceBetween: 20
-      }
-    }
-  });
-
-  /**
-   * Porfolio isotope and filter
-   */
-  window.addEventListener('load', () => {
-    let portfolioContainer = select('.portfolio-container');
-    if (portfolioContainer) {
-      let portfolioIsotope = new Isotope(portfolioContainer, {
-        itemSelector: '.portfolio-item',
-        layoutMode: 'fitRows'
+  /* ── Lazy image loading ─────────────────────────────────────────────────── */
+  function initLazy() {
+    const lazyImgs = document.querySelectorAll('img.lazy');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const img = e.target;
+        img.src = img.dataset.src;
+        img.onload = () => img.classList.add('img-loaded');
+        obs.unobserve(img);
       });
+    }, { rootMargin: '400px 0px' });
+    lazyImgs.forEach(img => obs.observe(img));
+  }
 
-      let portfolioFilters = select('#portfolio-flters li', true);
+  /* ── Lightbox ───────────────────────────────────────────────────────────── */
+  function initLightbox() {
+    const lb    = document.querySelector('.lb');
+    const lbImg = lb.querySelector('.lb__img');
+    let figs = [];
+    let cur = 0;
 
-      on('click', '#portfolio-flters li', function(e) {
-        e.preventDefault();
-        portfolioFilters.forEach(function(el) {
-          el.classList.remove('filter-active');
-        });
-        this.classList.add('filter-active');
-
-        portfolioIsotope.arrange({
-          filter: this.getAttribute('data-filter')
-        });
-      }, true);
+    function getFigs() {
+      figs = Array.from(document.querySelectorAll('.work-grid figure'));
     }
 
-  });
-
-  /**
-   * Initiate portfolio lightbox 
-   */
-  const portfolioLightbox = GLightbox({
-    selector: '.portfolio-lightbox'
-  });
-
-  /**
-   * Initiate portfolio details lightbox 
-   */
-  const portfolioDetailsLightbox = GLightbox({
-    selector: '.portfolio-details-lightbox',
-    width: '90%',
-    height: '90vh'
-  });
-
-  /**
-   * Portfolio details slider
-   */
-  new Swiper('.portfolio-details-slider', {
-    speed: 400,
-    loop: true,
-    autoplay: {
-      delay: 5000,
-      disableOnInteraction: false
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      type: 'bullets',
-      clickable: true
+    function imgSrc(fig) {
+      const img = fig.querySelector('img');
+      return img.dataset.src || img.src;
     }
+
+    function lbOpen(i) {
+      getFigs();
+      cur = i;
+      lbImg.src = imgSrc(figs[i]);
+      lbImg.alt = figs[i].querySelector('img').alt;
+      lb.classList.add('lb--open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function lbClose() {
+      lb.classList.remove('lb--open');
+      document.body.style.overflow = '';
+    }
+
+    grid.addEventListener('click', e => {
+      const fig = e.target.closest('figure');
+      if (!fig) return;
+      getFigs();
+      lbOpen(figs.indexOf(fig));
+    });
+
+    lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
+    lb.querySelector('.lb__close').addEventListener('click', lbClose);
+    lb.querySelector('.lb__prev').addEventListener('click', e => {
+      e.stopPropagation();
+      getFigs();
+      lbOpen((cur - 1 + figs.length) % figs.length);
+    });
+    lb.querySelector('.lb__next').addEventListener('click', e => {
+      e.stopPropagation();
+      getFigs();
+      lbOpen((cur + 1) % figs.length);
+    });
+
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('lb--open')) return;
+      if (e.key === 'Escape')     lbClose();
+      if (e.key === 'ArrowLeft')  { getFigs(); lbOpen((cur - 1 + figs.length) % figs.length); }
+      if (e.key === 'ArrowRight') { getFigs(); lbOpen((cur + 1) % figs.length); }
+    });
+  }
+
+  /* ── Inline video playback ──────────────────────────────────────────────── */
+  document.querySelectorAll('.video-card').forEach(card => {
+    const thumb = card.querySelector('.video-card__thumb');
+    card.addEventListener('click', () => {
+      if (thumb.querySelector('iframe')) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${card.dataset.vid}?autoplay=1&rel=0`;
+      iframe.allow = 'autoplay; encrypted-media; fullscreen';
+      iframe.allowFullscreen = true;
+      thumb.innerHTML = '';
+      thumb.appendChild(iframe);
+    });
   });
 
-  /**
-   * Initiate Pure Counter 
-   */
-  new PureCounter();
+  buildWorkGrid();
 
-})()
+})();
