@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Photo curator for the homepage (index.html): the Work grid and the Film grid.
+"""Curator for the homepage (index.html): the Work, Video and Film sections.
 
     python3 curate/server.py        then open http://localhost:4321
 
 Browse every image in img/, drop new ones in from Finder, pick and order what
 goes in each grid, preview the real homepage live, and publish as one git
-commit (data/work.json, data/film.json and the photos they use, nothing else).
+commit (data/work.json, data/video.json, data/film.json, data/site.js and the
+photos they use, nothing else).
 """
 import json
 import os
@@ -17,7 +18,8 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX = os.path.join(ROOT, "index.html")
-SECTIONS = ("work", "film")  # data/<name>.json
+SECTIONS = ("work", "film", "video")  # data/<name>.json
+YT_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 THUMBS = os.path.join(ROOT, "curate", ".thumbs")
 IMG_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 PORT = int(os.environ.get("PORT", 4321))
@@ -147,10 +149,15 @@ def rename(src, dst):
 # ------------------------------------------------------------------ publish
 def publish(state, message, push):
     state = {"work": [s for s in state.get("work", []) if s],
-             "film": [f for f in state.get("film", []) if f.get("src")]}
+             "film": [f for f in state.get("film", []) if f.get("src")],
+             "video": [{"id": v["id"].strip(), "title": v.get("title", "")}
+                       for v in state.get("video", []) if v.get("id", "").strip()]}
     missing = [s for s in srcs(state) if not os.path.exists(safe_rel(s))]
     if missing:
         raise FileNotFoundError("missing on disk: " + ", ".join(missing))
+    bad = [v["id"] for v in state["video"] if not YT_ID.match(v["id"])]
+    if bad:
+        raise ValueError("not a YouTube video ID: " + ", ".join(bad))
     for n in SECTIONS:
         save(n, state[n])
     write_site_js()
@@ -164,7 +171,7 @@ def publish(state, message, push):
         return {"ok": True, "nothing": True}
 
     added = [l.split("\t")[-1] for l in staged.splitlines() if l.startswith("A") and "\timg/" in l]
-    body = message.strip() or "Update homepage photos"
+    body = message.strip() or "Update homepage"
     if added:
         body += "\n\nAdded images:\n" + "\n".join("- " + a for a in added)
     # --only: commit just these paths, other uncommitted work in the repo stays as it is

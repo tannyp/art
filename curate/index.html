@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Photo Curator</title>
+<title>Site Curator</title>
 <style>
   :root {
     --bg: #f6f3ee; --panel: #fffdf9; --ink: #1d1b18; --mute: #8a847a; --line: #e4ded3;
@@ -75,6 +75,14 @@
   .film-row .fields { display: flex; flex-direction: column; gap: 5px; cursor: default; }
   .film-row .x { display: block; position: static; align-self: flex-end; width: auto; height: auto; padding: 2px 8px; border-radius: 5px; border: 1px solid var(--line); background: var(--panel); color: var(--mute); font-size: 11px; }
   .film-row .name { padding: 0; }
+  .vid-form label.f { display: block; font-size: 11px; color: var(--mute); margin: 10px 0 3px; }
+  .vid-form label.f:first-child { margin-top: 0; }
+  .vid-peek { margin-top: 8px; aspect-ratio: 16/9; border-radius: 6px; background: var(--line) center/cover no-repeat; display: none; }
+  .vid-peek.on { display: block; }
+  .vid-row .th { aspect-ratio: 16/9; }
+  .vid-row .id { font-size: 11px; color: var(--mute); }
+  .vid-row .id a { color: inherit; }
+  [hidden] { display: none !important; }
   .empty { color: var(--mute); padding: 24px; border: 1px dashed var(--line); border-radius: 6px; text-align: center; }
 
   /* preview */
@@ -103,9 +111,10 @@
 </head>
 <body>
 <header>
-  <h1>Photo Curator</h1>
+  <h1>Site Curator</h1>
   <div class="tabs" id="tabs">
     <div class="tab on" data-s="work">Work<span class="n" id="n-work"></span><span class="dot" id="d-work"></span></div>
+    <div class="tab" data-s="video">Video<span class="n" id="n-video"></span><span class="dot" id="d-video"></span></div>
     <div class="tab" data-s="film">Film<span class="n" id="n-film"></span><span class="dot" id="d-film"></span></div>
   </div>
   <span class="pill" id="branch"></span>
@@ -116,7 +125,23 @@
 </header>
 
 <main>
-  <section class="col">
+  <section class="col" id="videoSide" hidden>
+    <div class="col-head"><h2>Add a video</h2></div>
+    <div class="scroll">
+      <form id="vidForm" class="vid-form">
+        <label class="f">YouTube link or video ID</label>
+        <input id="vidUrl" placeholder="https://www.youtube.com/watch?v=…" autocomplete="off">
+        <div class="vid-peek" id="vidPeek"></div>
+        <label class="f">Title</label>
+        <input id="vidTitle" placeholder="e.g. Origins">
+        <button class="primary" id="vidAdd" disabled style="margin-top:10px;width:100%">Add to Video</button>
+        <p class="result err" id="vidErr"></p>
+      </form>
+      <p class="hint" style="margin-top:16px">Paste a link from the YouTube address bar or its Share button. youtu.be, Shorts and embed links all work. The thumbnail comes from YouTube.</p>
+    </div>
+  </section>
+
+  <section class="col" id="photoSide">
     <div class="col-head">
       <h2>All photos</h2>
       <input id="search" placeholder="Filter…" style="width:100px">
@@ -150,7 +175,7 @@
   <label class="f">Commit message</label>
   <textarea id="pubMsg" rows="3"></textarea>
   <label style="display:block;margin-top:8px;font-size:12px"><input type="checkbox" id="pubPush" style="width:auto"> Also push to GitHub</label>
-  <p class="hint" style="margin-top:10px">Commits <code>data/work.json</code>, <code>data/film.json</code>, <code>data/site.js</code> and the photos they use. Nothing else in the repo is included.</p>
+  <p class="hint" style="margin-top:10px">Commits the section lists in <code>data/</code> (work, video, film, plus <code>site.js</code>) and the photos they use. Nothing else in the repo is included.</p>
   <div id="pubWarn"></div>
   <div class="result" id="pubResult"></div>
   <div class="row"><button id="pubCancel">Close</button><button class="primary" id="pubGo">Commit</button></div>
@@ -171,7 +196,16 @@
 const $ = s => document.querySelector(s);
 const thumb = src => '/api/thumb?p=' + encodeURIComponent(src);
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const LABEL = { work: 'Work', film: 'Film' };
+const LABEL = { work: 'Work', video: 'Video', film: 'Film' };
+const SECS = ['work', 'video', 'film'];
+const ytThumb = id => `https://img.youtube.com/vi/${encodeURIComponent(id)}/mqdefault.jpg`;
+// accepts watch?v=, youtu.be/, shorts/, embed/, live/ links or a bare 11-character ID
+function ytId(s) {
+  s = (s || '').trim();
+  if (/^[A-Za-z0-9_-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
 let state, saved, lib = [], sec = 'work', folder = 'all', meta = {};
 
 function toast(m, ms = 1800) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms); }
@@ -191,7 +225,7 @@ let pt;
 function changed(rerender = true) {
   const old = JSON.parse(saved);
   let any = false;
-  for (const k of ['work', 'film']) {
+  for (const k of SECS) {
     const d = JSON.stringify(state[k]) !== JSON.stringify(old[k]);
     $('#d-' + k).classList.toggle('on', d); any ||= d;
   }
@@ -222,9 +256,13 @@ $('#tabs').onclick = e => {
 };
 
 function render() {
-  $('#n-work').textContent = state.work.length; $('#n-film').textContent = state.film.length;
+  state.video ||= [];
+  SECS.forEach(k => $('#n-' + k).textContent = state[k].length);
   $('#dropTarget').textContent = LABEL[sec];
-  renderLibrary(); renderEditor();
+  $('#videoSide').hidden = sec !== 'video';
+  $('#photoSide').hidden = sec === 'video';
+  if (sec !== 'video') renderLibrary();
+  renderEditor();
 }
 
 /* ---------- library ---------- */
@@ -268,6 +306,7 @@ document.addEventListener('drop', async e => {
   drop.classList.remove('over');
   if (!e.dataTransfer?.files.length) return;
   e.preventDefault();
+  if (sec === 'video') return toast('Switch to Work or Film to add photos', 2500);
   const files = [...e.dataTransfer.files], fold = $('#dropFolder').value.trim() || 'dance';
   let ok = 0;
   for (const [n, f] of files.entries()) {
@@ -283,10 +322,31 @@ document.addEventListener('drop', async e => {
 /* ---------- editor ---------- */
 function renderEditor() {
   const l = list();
-  $('#secTitle').textContent = sec === 'work' ? 'Work grid' : 'Film grid';
-  $('#secCount').textContent = l.length + (l.length === 1 ? ' photo' : ' photos');
-  if (!l.length) { $('#editor').innerHTML = '<p class="empty">Click photos on the left (or drop them from Finder) to add them here.</p>'; return; }
-  if (sec === 'work') {
+  $('#secTitle').textContent = LABEL[sec] + ' section';
+  const noun = sec === 'video' ? 'video' : 'photo';
+  $('#secCount').textContent = l.length + ' ' + noun + (l.length === 1 ? '' : 's');
+  if (!l.length) {
+    $('#editor').innerHTML = sec === 'video'
+      ? '<p class="empty">Paste a YouTube link on the left to add a video.</p>'
+      : '<p class="empty">Click photos on the left (or drop them from Finder) to add them here.</p>';
+    return;
+  }
+  if (sec === 'video') {
+    $('#editor').innerHTML = `<p class="hint">Drag to reorder. Click a video on the site to play it inline.</p>
+      ${l.map((v, i) => `
+        <div class="card film-row vid-row" draggable="true" data-i="${i}">
+          <div class="th"><img src="${ytThumb(v.id)}"></div>
+          <div class="fields">
+            <input data-k="title" placeholder="Title" value="${esc(v.title)}">
+            <input data-vid placeholder="YouTube link or ID" value="${esc(v.id)}">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="id"><a href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}" target="_blank" rel="noopener">Open on YouTube ↗</a></span>
+              <span class="spacer"></span>
+              <button class="x" data-rm>Remove</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
+  } else if (sec === 'work') {
     $('#editor').innerHTML = `<p class="hint">Drag to reorder. The first 3 load first on the site. Click a name to rename the file.</p>
       <div class="work-cards">${l.map((src, i) => `
         <div class="card" draggable="true" data-i="${i}">
@@ -314,6 +374,14 @@ function renderEditor() {
 }
 const ed = $('#editor');
 ed.addEventListener('input', e => {
+  if (e.target.matches('[data-vid]')) {
+    const id = ytId(e.target.value), row = e.target.closest('.card');
+    e.target.style.borderColor = id ? '' : 'var(--accent)';
+    if (!id) return;
+    list()[+row.dataset.i].id = id;
+    row.querySelector('.th img').src = ytThumb(id);
+    return changed(false);
+  }
   const k = e.target.dataset.k; if (!k) return;
   list()[+e.target.closest('.card').dataset.i][k] = e.target.value;
   changed(false);
@@ -342,6 +410,24 @@ ed.addEventListener('drop', e => {
   if (c && +c.dataset.i !== from) { const l = list(); l.splice(+c.dataset.i, 0, ...l.splice(from, 1)); changed(); }
 });
 ed.addEventListener('dragend', () => { from = null; ed.querySelectorAll('.dragging,.over').forEach(x => x.classList.remove('dragging', 'over')); });
+
+/* ---------- add video ---------- */
+$('#vidUrl').addEventListener('input', () => {
+  const raw = $('#vidUrl').value.trim(), id = ytId(raw);
+  $('#vidPeek').classList.toggle('on', !!id);
+  if (id) $('#vidPeek').style.backgroundImage = `url(${ytThumb(id)})`;
+  $('#vidAdd').disabled = !id;
+  $('#vidErr').textContent = raw && !id ? 'That doesn’t look like a YouTube link.'
+    : id && state.video.some(v => v.id === id) ? 'Already in the Video section.' : '';
+});
+$('#vidForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const id = ytId($('#vidUrl').value);
+  if (!id || state.video.some(v => v.id === id)) return;
+  state.video.push({ id, title: $('#vidTitle').value.trim() });
+  $('#vidForm').reset(); $('#vidPeek').classList.remove('on'); $('#vidAdd').disabled = true;
+  changed(); toast('Added to Video'); $('#vidUrl').focus();
+});
 
 /* ---------- rename ---------- */
 let renSrc = null;
@@ -373,12 +459,13 @@ $('#vp').onchange = e => { $('#frame').style.width = e.target.value; };
 $('#revert').onclick = () => { if (confirm('Discard all unpublished changes?')) { state = JSON.parse(saved); changed(); } };
 $('#publish').onclick = async () => {
   const old = JSON.parse(saved), parts = [];
-  for (const k of ['work', 'film']) {
-    const a = new Set(old[k].map(srcOf)), b = new Set(state[k].map(srcOf));
+  for (const k of SECS) {
+    const key = k === 'video' ? v => v.id : srcOf;
+    const a = new Set((old[k] || []).map(key)), b = new Set(state[k].map(key));
     const add = [...b].filter(s => !a.has(s)).length, rm = [...a].filter(s => !b.has(s)).length;
     if (JSON.stringify(old[k]) === JSON.stringify(state[k])) continue;
     const bits = [add && `+${add}`, rm && `−${rm}`].filter(Boolean).join(' ');
-    parts.push(`${k} grid${bits ? ' (' + bits + ')' : ''}`);
+    parts.push(`${k}${bits ? ' (' + bits + ')' : ''}`);
   }
   $('#pubMsg').value = 'Update ' + parts.join(', ');
   $('#pubResult').textContent = ''; $('#pubResult').className = 'result'; $('#pubGo').disabled = false;

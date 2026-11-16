@@ -5,6 +5,7 @@
   const grid = document.getElementById('workGrid');
 
   const filmGrid = document.getElementById('filmGrid');
+  const videoGrid = document.getElementById('videoGrid');
 
   // the photo curator (curate/server.py) injects unpublished edits here for its preview
   const draft = window.__CURATE__ || {};
@@ -43,8 +44,9 @@
   }
 
   async function buildWorkGrid() {
-    const [images, films] = await Promise.all([load('work'), load('film')]);
+    const [images, films, videos] = await Promise.all([load('work'), load('film'), load('video')]);
     if (filmGrid) buildFilmGrid(films);
+    if (videoGrid) buildVideoGrid(videos);
 
     images.forEach((src, i) => {
       const fig = document.createElement('figure');
@@ -145,19 +147,38 @@
     });
   }
 
-  /* ── Inline video playback ──────────────────────────────────────────────── */
-  document.querySelectorAll('.video-card').forEach(card => {
-    const thumb = card.querySelector('.video-card__thumb');
-    card.addEventListener('click', () => {
-      if (thumb.querySelector('iframe')) return;
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${card.dataset.vid}?autoplay=1&rel=0`;
-      iframe.allow = 'autoplay; encrypted-media; fullscreen';
-      iframe.allowFullscreen = true;
-      thumb.innerHTML = '';
-      thumb.appendChild(iframe);
+  /* ── Video grid (data/video.json) with inline playback ─────────────────── */
+  function buildVideoGrid(videos) {
+    videos.forEach(v => {
+      if (!v.id) return;
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.dataset.vid = v.id;
+      const thumb = document.createElement('div');
+      thumb.className = 'video-card__thumb';
+      const img = document.createElement('img');
+      img.className = 'lazy';
+      img.dataset.src = `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+      img.src = '';
+      img.alt = v.title || '';
+      thumb.appendChild(img);
+      const cap = document.createElement('span');
+      cap.className = 'video-card__cap';
+      cap.textContent = v.title || '';
+      card.append(thumb, cap);
+
+      card.addEventListener('click', () => {
+        if (thumb.querySelector('iframe')) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+        iframe.allow = 'autoplay; encrypted-media; fullscreen';
+        iframe.allowFullscreen = true;
+        thumb.innerHTML = '';
+        thumb.appendChild(iframe);
+      });
+      videoGrid.appendChild(card);
     });
-  });
+  }
 
   buildWorkGrid();
 
