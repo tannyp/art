@@ -1,0 +1,275 @@
+#!/usr/bin/env python3
+"""Photo curator for the homepage (index.html): the Work grid and the Film grid.
+
+    python3 curate/server.py        then open http://localhost:4321
+
+Browse every image in img/, drop new ones in from Finder, pick and order what
+goes in each grid, preview the real homepage live, and publish as one git
+commit (data/work.json, data/film.json and the photos they use, nothing else).
+"""
+import json
+import os
+import re
+import subprocess
+import sys
+import urllib.parse
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+INDEX = os.path.join(ROOT, "index.html")
+SECTIONS = ("work", "film")  # data/<name>.json
+THUMBS = os.path.join(ROOT, "curate", ".thumbs")
+IMG_EXT = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+PORT = int(os.environ.get("PORT", 4321))
+
+draft = None          # unpublished {work, film} posted by the UI, used by the preview
+renamed_from = set()  # old paths of files renamed this session, so the commit records the move
+
+
+def git(*args, check=True):
+    r = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
+    if check and r.returncode != 0:
+        raise RuntimeError(f"git {' '.join(args)}: {r.stderr.strip() or r.stdout.strip()}")
+    return r.stdout.strip()
+
+
+def data_path(name):
+    return os.path.join(ROOT, "data", name + ".json")
+
+
+def load(name):
+    try:
+        with open(data_path(name)) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+
+def save(name, value):
+    with open(data_path(name), "w") as f:
+        json.dump(value, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+
+def load_all():
+    return {n: load(n) for n in SECTIONS}
+
+
+def srcs(state):
+    """Every image path the state uses."""
+    out = list(state.get("work", []))
+    out += [f["src"] for f in state.get("film", []) if f.get("src")]
+    return out
+
+
+def safe_rel(path):
+    """Resolve a repo-relative path and refuse anything outside the repo."""
+    full = os.path.realpath(os.path.join(ROOT, path))
+    if not full.startswith(ROOT + os.sep):
+        raise ValueError("path outside repo")
+    return full
+
+
+def thumb_key(rel):
+    return os.path.join(THUMBS, re.sub(r"[^A-Za-z0-9._-]", "_", rel) + ".jpg")
+
+
+# ------------------------------------------------------------------ preview
+def preview_page(state):
+    with open(INDEX) as f:
+        page = f.read()
+    inject = '<script>window.__CURATE__ = ' + json.dumps(state).replace("</", "<\\/") + ';</script>\n'
+    page = page.replace("<head>", '<head>\n    <base href="/">', 1)
+    return page.replace('<script src="js/main.js">', inject + '<script src="js/main.js">', 1)
+
+
+# ------------------------------------------------------------------ library
+def library():
+    tracked = set(git("ls-files", "img").splitlines())
+    items = []
+    for dirpath, dirs, files in os.walk(os.path.join(ROOT, "img")):
+        dirs[:] = sorted(d for d in dirs if not d.startswith("."))
+        for name in sorted(files):
+            if os.path.splitext(name)[1].lower() not in IMG_EXT:
+                continue
+            rel = os.path.relpath(os.path.join(dirpath, name), ROOT)
+            items.append({"src": rel, "folder": os.path.dirname(rel)[4:] or "(root)",
+                          "name": name, "new": rel not in tracked})
+    return items
+
+
+def thumb(rel):
+    full = safe_rel(rel)
+    os.makedirs(THUMBS, exist_ok=True)
+    out = thumb_key(rel)
+    if not os.path.exists(out) or os.path.getmtime(out) < os.path.getmtime(full):
+        r = subprocess.run(["sips", "-s", "format", "jpeg", "-Z", "480", full, "--out", out],
+                           capture_output=True)
+        if r.returncode != 0:
+            return full
+    return out
+
+
+# ------------------------------------------------------------------- rename
+def rename(src, dst):
+    src_full, dst_full = safe_rel(src), safe_rel(dst)
+    if os.path.splitext(dst)[1].lower() not in IMG_EXT:
+        raise ValueError("keep an image extension (.jpg, .png, …)")
+    if not os.path.exists(src_full):
+        raise FileNotFoundError(src)
+    if os.path.exists(dst_full):
+        raise FileExistsError(f"{dst} already exists")
+    os.makedirs(os.path.dirname(dst_full), exist_ok=True)
+    os.rename(src_full, dst_full)
+    renamed_from.add(src)
+    # keep the saved data pointing at the file so the live site never breaks
+    work = [dst if p == src else p for p in load("work")]
+    film = [{**f, "src": dst} if f.get("src") == src else f for f in load("film")]
+    save("work", work)
+    save("film", film)
+    if os.path.exists(thumb_key(src)):
+        os.remove(thumb_key(src))
+    return dst
+
+
+# ------------------------------------------------------------------ publish
+def publish(state, message, push):
+    state = {"work": [s for s in state.get("work", []) if s],
+             "film": [f for f in state.get("film", []) if f.get("src")]}
+    missing = [s for s in srcs(state) if not os.path.exists(safe_rel(s))]
+    if missing:
+        raise FileNotFoundError("missing on disk: " + ", ".join(missing))
+    for n in SECTIONS:
+        save(n, state[n])
+
+    tracked = set(git("ls-files").splitlines())
+    paths = [f"data/{n}.json" for n in SECTIONS] + sorted(set(srcs(state)))
+    paths += sorted(p for p in renamed_from if p in tracked)  # stages the old name's removal
+    git("add", "-A", "--", *paths)
+    staged = git("diff", "--cached", "--name-status", "--", *paths)
+    if not staged:
+        return {"ok": True, "nothing": True}
+
+    added = [l.split("\t")[-1] for l in staged.splitlines() if l.startswith("A") and "\timg/" in l]
+    body = message.strip() or "Update homepage photos"
+    if added:
+        body += "\n\nAdded images:\n" + "\n".join("- " + a for a in added)
+    # --only: commit just these paths, other uncommitted work in the repo stays as it is
+    git("commit", "-m", body, "--only", "--", *paths)
+    renamed_from.clear()
+    sha = git("rev-parse", "--short", "HEAD")
+    branch = git("rev-parse", "--abbrev-ref", "HEAD")
+    pushed = None
+    if push:
+        r = subprocess.run(["git", "push", "-u", "origin", branch], cwd=ROOT, capture_output=True, text=True)
+        pushed = "ok" if r.returncode == 0 else (r.stderr.strip() or "push failed")
+    files = [l.split("\t")[-1] for l in staged.splitlines()]
+    return {"ok": True, "sha": sha, "branch": branch, "files": files, "pushed": pushed}
+
+
+def site_uncommitted():
+    """Site files with uncommitted edits that a publish will NOT include."""
+    out = git("status", "--porcelain", "--", "index.html", "js", "css")
+    return [l[3:] for l in out.splitlines()]
+
+
+# ------------------------------------------------------------------- server
+class Handler(SimpleHTTPRequestHandler):
+    def __init__(self, *a, **kw):
+        super().__init__(*a, directory=ROOT, **kw)
+
+    def log_message(self, fmt, *args):
+        if "/api/" in str(args[0] if args else ""):
+            sys.stderr.write("  " + fmt % args + "\n")
+
+    def send_json(self, obj, code=200):
+        body = json.dumps(obj).encode()
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def send_bytes(self, body, ctype):
+        self.send_response(200)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def read_json(self):
+        n = int(self.headers.get("Content-Length") or 0)
+        return json.loads(self.rfile.read(n))
+
+    def do_GET(self):
+        u = urllib.parse.urlparse(self.path)
+        q = urllib.parse.parse_qs(u.query)
+        try:
+            if u.path in ("/", "/curate", "/curate/"):
+                with open(os.path.join(ROOT, "curate", "index.html"), "rb") as f:
+                    return self.send_bytes(f.read(), "text/html; charset=utf-8")
+            if u.path == "/api/library":
+                return self.send_json(library())
+            if u.path == "/api/state":
+                return self.send_json({"state": load_all(),
+                                       "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
+                                       "uncommitted": site_uncommitted()})
+            if u.path == "/api/thumb":
+                with open(thumb(q["p"][0]), "rb") as f:
+                    return self.send_bytes(f.read(), "image/jpeg")
+            if u.path == "/__preview":
+                return self.send_bytes(preview_page(draft or load_all()).encode(), "text/html; charset=utf-8")
+        except Exception as e:
+            return self.send_json({"error": str(e)}, 500)
+        return super().do_GET()
+
+    def do_POST(self):
+        global draft
+        u = urllib.parse.urlparse(self.path)
+        q = urllib.parse.parse_qs(u.query)
+        try:
+            if u.path == "/api/draft":
+                draft = self.read_json()
+                return self.send_json({"ok": True})
+            if u.path == "/api/rename":
+                b = self.read_json()
+                return self.send_json({"src": rename(b["from"], b["to"])})
+            if u.path == "/api/upload":
+                folder = re.sub(r"[^A-Za-z0-9 _-]", "", q.get("folder", ["uploads"])[0]).strip() or "uploads"
+                name = os.path.basename(q["name"][0])
+                base, ext = os.path.splitext(name)
+                dest_dir = safe_rel(os.path.join("img", folder))
+                os.makedirs(dest_dir, exist_ok=True)
+                n = int(self.headers.get("Content-Length") or 0)
+                data = self.rfile.read(n)
+                if ext.lower() in (".heic", ".heif", ".tif", ".tiff"):
+                    os.makedirs(THUMBS, exist_ok=True)
+                    tmp = os.path.join(THUMBS, "upload" + ext)
+                    with open(tmp, "wb") as f:
+                        f.write(data)
+                    dest = os.path.join(dest_dir, base + ".jpg")
+                    subprocess.run(["sips", "-s", "format", "jpeg", tmp, "--out", dest],
+                                   check=True, capture_output=True)
+                    os.remove(tmp)
+                elif ext.lower() in IMG_EXT:
+                    dest = os.path.join(dest_dir, name)
+                    with open(dest, "wb") as f:
+                        f.write(data)
+                else:
+                    return self.send_json({"error": f"{name}: not an image"}, 400)
+                return self.send_json({"src": os.path.relpath(dest, ROOT)})
+            if u.path == "/api/publish":
+                b = self.read_json()
+                result = publish(b["state"], b.get("message", ""), b.get("push", False))
+                draft = None
+                return self.send_json(result)
+        except Exception as e:
+            return self.send_json({"error": str(e)}, 500)
+        self.send_error(404)
+
+
+if __name__ == "__main__":
+    os.chdir(ROOT)
+    print(f"Photo curator → http://localhost:{PORT}   (Ctrl+C to stop)")
+    ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()

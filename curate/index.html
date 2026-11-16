@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo Curator</title>
+<style>
+  :root {
+    --bg: #f6f3ee; --panel: #fffdf9; --ink: #1d1b18; --mute: #8a847a; --line: #e4ded3;
+    --accent: #b5532c; --accent-soft: #f4e2d8; --ok: #3d7a4f;
+    font: 13px/1.4 Inter, -apple-system, system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); height: 100vh; display: flex; flex-direction: column; }
+  button, select, input, textarea { font: inherit; color: inherit; }
+  button { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+  button:hover { border-color: var(--mute); }
+  button.primary { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  button.primary:disabled { opacity: .35; cursor: default; }
+  input, textarea { border: 1px solid var(--line); border-radius: 5px; padding: 4px 6px; background: #fff; width: 100%; }
+
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; }
+  header h1 { font-size: 14px; font-weight: 600; margin: 0 6px 0 0; }
+  .pill { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--line); color: var(--mute); }
+  .pill.dirty { background: var(--accent-soft); color: var(--accent); }
+  .spacer { flex: 1; }
+  .tabs { display: flex; gap: 2px; background: var(--line); padding: 2px; border-radius: 8px; }
+  .tab { padding: 4px 14px; border-radius: 6px; cursor: pointer; color: var(--mute); }
+  .tab.on { background: var(--panel); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .tab .n { font-size: 11px; color: var(--mute); margin-left: 4px; }
+  .tab .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: 5px; vertical-align: middle; visibility: hidden; }
+  .tab .dot.on { visibility: visible; }
+
+  main { flex: 1; display: grid; grid-template-columns: 300px minmax(340px, 1fr) minmax(360px, 1.1fr); min-height: 0; }
+  .col { display: flex; flex-direction: column; min-height: 0; border-right: 1px solid var(--line); }
+  .col-head { padding: 9px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 6px; align-items: center; }
+  .col-head h2 { margin: 0 auto 0 0; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); font-weight: 600; white-space: nowrap; }
+  .scroll { overflow: auto; flex: 1; padding: 12px; }
+  .hint { color: var(--mute); font-size: 12px; margin: 0 0 10px; }
+
+  /* library */
+  .folders { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  .chip { font-size: 11px; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); cursor: pointer; background: var(--panel); }
+  .chip.on { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  .lib-group h3 { font-size: 11px; color: var(--mute); margin: 14px 0 6px; font-weight: 500; }
+  .lib-group:first-child h3 { margin-top: 0; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .tile { position: relative; aspect-ratio: 1; border-radius: 4px; overflow: hidden; background: var(--line); cursor: pointer; outline: 2px solid transparent; outline-offset: 1px; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile:hover { outline-color: var(--mute); }
+  .tile.used { outline-color: var(--accent); }
+  .tile.used img { opacity: .55; }
+  .tile .badge { position: absolute; top: 3px; left: 3px; font-size: 10px; background: rgba(0,0,0,.65); color: #fff; padding: 0 5px; border-radius: 3px; }
+  .tile .badge.new { background: var(--ok); }
+  .tile .plus { position: absolute; right: 4px; bottom: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.92); display: none; align-items: center; justify-content: center; font-size: 13px; }
+  .tile:hover .plus, .tile.used .plus { display: flex; }
+  .drop { margin: 10px 12px; padding: 12px; border: 1.5px dashed var(--line); border-radius: 8px; text-align: center; color: var(--mute); font-size: 12px; }
+  .drop.over { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .drop input { width: 90px; padding: 1px 4px; }
+
+  /* section editor */
+  .work-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+  .card { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; cursor: grab; }
+  .card.dragging { opacity: .35; }
+  .card.over { outline: 2px solid var(--accent); }
+  .card .th { aspect-ratio: 4/5; background: var(--line); }
+  .card .th img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .card .num { position: absolute; top: 4px; left: 4px; font-size: 10px; background: rgba(0,0,0,.6); color: #fff; padding: 0 5px; border-radius: 3px; }
+  .card .x { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); display: none; }
+  .card:hover .x { display: block; }
+  .card .name { font-size: 11px; color: var(--mute); padding: 4px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: text; }
+  .card .name:hover { color: var(--ink); text-decoration: underline; }
+  .film-row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; padding: 8px; margin-bottom: 8px; cursor: grab; }
+  .film-row .th { aspect-ratio: 16/10; border-radius: 4px; overflow: hidden; }
+  .film-row .fields { display: flex; flex-direction: column; gap: 5px; cursor: default; }
+  .film-row .x { display: block; position: static; align-self: flex-end; width: auto; height: auto; padding: 2px 8px; border-radius: 5px; border: 1px solid var(--line); background: var(--panel); color: var(--mute); font-size: 11px; }
+  .film-row .name { padding: 0; }
+  .empty { color: var(--mute); padding: 24px; border: 1px dashed var(--line); border-radius: 6px; text-align: center; }
+
+  /* preview */
+  .preview-wrap { flex: 1; display: flex; justify-content: center; background: var(--line); min-height: 0; }
+  .preview-wrap iframe { border: 0; background: #fff; width: 100%; height: 100%; }
+  .col-head select { border: 1px solid var(--line); border-radius: 5px; padding: 3px 4px; background: #fff; }
+
+  dialog { border: 1px solid var(--line); border-radius: 10px; padding: 20px; width: min(500px, 92vw); background: var(--panel); color: var(--ink); }
+  dialog::backdrop { background: rgba(0,0,0,.3); }
+  dialog h3 { margin: 0 0 12px; font-size: 15px; }
+  dialog label.f { display: block; font-size: 11px; color: var(--mute); margin: 8px 0 3px; }
+  dialog .row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  .result { margin-top: 10px; font-size: 12px; white-space: pre-wrap; }
+  .result.err { color: var(--accent); }
+  .warn { background: var(--accent-soft); color: var(--accent); border-radius: 6px; padding: 8px 10px; font-size: 12px; margin-top: 10px; }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--panel); padding: 8px 14px; border-radius: 6px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 1100px) {
+    body { height: auto; }
+    main { grid-template-columns: 280px 1fr; }
+    .col.preview { grid-column: 1 / -1; height: 75vh; }
+  }
+  @media (max-width: 700px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Photo Curator</h1>
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-s="work">Work<span class="n" id="n-work"></span><span class="dot" id="d-work"></span></div>
+    <div class="tab" data-s="film">Film<span class="n" id="n-film"></span><span class="dot" id="d-film"></span></div>
+  </div>
+  <span class="pill" id="branch"></span>
+  <span class="pill" id="dirty">published</span>
+  <span class="spacer"></span>
+  <button id="revert">Discard changes</button>
+  <button class="primary" id="publish" disabled>Publish…</button>
+</header>
+
+<main>
+  <section class="col">
+    <div class="col-head">
+      <h2>All photos</h2>
+      <input id="search" placeholder="Filter…" style="width:100px">
+      <label style="white-space:nowrap;font-size:12px"><input type="checkbox" id="onlyNew" style="width:auto"> new</label>
+    </div>
+    <div class="folders" id="folders"></div>
+    <div class="drop" id="drop">
+      Drop photos from Finder anywhere<br>
+      <small>saved to img/<input id="dropFolder" value="dance">/ and added to <b id="dropTarget">Work</b></small>
+    </div>
+    <div class="scroll" id="library"></div>
+  </section>
+
+  <section class="col">
+    <div class="col-head"><h2 id="secTitle">Work grid</h2><span class="pill" id="secCount"></span></div>
+    <div class="scroll" id="editor"></div>
+  </section>
+
+  <section class="col preview">
+    <div class="col-head">
+      <h2>Live preview · homepage</h2>
+      <select id="vp"><option value="100%">Desktop</option><option value="820px">Tablet</option><option value="390px">Phone</option></select>
+      <button id="reload" title="Reload preview">↺</button>
+    </div>
+    <div class="preview-wrap"><iframe id="frame" src="/__preview"></iframe></div>
+  </section>
+</main>
+
+<dialog id="pubDlg">
+  <h3>Publish to <span id="pubBranch"></span></h3>
+  <label class="f">Commit message</label>
+  <textarea id="pubMsg" rows="3"></textarea>
+  <label style="display:block;margin-top:8px;font-size:12px"><input type="checkbox" id="pubPush" style="width:auto"> Also push to GitHub</label>
+  <p class="hint" style="margin-top:10px">Commits <code>data/work.json</code>, <code>data/film.json</code> and the photos they use. Nothing else in the repo is included.</p>
+  <div id="pubWarn"></div>
+  <div class="result" id="pubResult"></div>
+  <div class="row"><button id="pubCancel">Close</button><button class="primary" id="pubGo">Commit</button></div>
+</dialog>
+
+<dialog id="renDlg">
+  <h3>Rename photo</h3>
+  <label class="f">Path</label>
+  <input id="renPath">
+  <p class="hint" style="margin-top:8px">Renames the file on disk. The commit records it as a move.</p>
+  <div class="result" id="renResult"></div>
+  <div class="row"><button id="renCancel">Cancel</button><button class="primary" id="renGo">Rename</button></div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const thumb = src => '/api/thumb?p=' + encodeURIComponent(src);
+const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const LABEL = { work: 'Work', film: 'Film' };
+let state, saved, lib = [], sec = 'work', folder = 'all', meta = {};
+
+function toast(m, ms = 1800) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms); }
+const srcOf = item => typeof item === 'string' ? item : item.src;
+const list = () => state[sec];
+const has = src => list().some(i => srcOf(i) === src);
+
+async function init() {
+  const [s, l] = await Promise.all([fetch('/api/state').then(r => r.json()), fetch('/api/library').then(r => r.json())]);
+  state = s.state; saved = JSON.stringify(state); lib = l; meta = s;
+  $('#branch').textContent = '⎇ ' + s.branch; $('#pubBranch').textContent = s.branch;
+  render(); refreshPreview();
+}
+
+/* ---------- change tracking + preview ---------- */
+let pt;
+function changed(rerender = true) {
+  const old = JSON.parse(saved);
+  let any = false;
+  for (const k of ['work', 'film']) {
+    const d = JSON.stringify(state[k]) !== JSON.stringify(old[k]);
+    $('#d-' + k).classList.toggle('on', d); any ||= d;
+  }
+  $('#dirty').textContent = any ? 'unpublished changes' : 'published';
+  $('#dirty').classList.toggle('dirty', any);
+  $('#publish').disabled = !any;
+  if (rerender) render();
+  clearTimeout(pt); pt = setTimeout(refreshPreview, 300);
+}
+async function refreshPreview() {
+  await fetch('/api/draft', { method: 'POST', body: JSON.stringify(state) });
+  const f = $('#frame'); let y = null;
+  try { y = f.contentWindow.scrollY; } catch (e) {}
+  f.onload = () => { try {
+    const w = f.contentWindow;
+    if (y) w.scrollTo(0, y); else w.document.getElementById(sec)?.scrollIntoView();
+  } catch (e) {} };
+  f.src = '/__preview?t=' + Date.now();
+}
+function scrollPreviewTo(id) { try { $('#frame').contentWindow.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); } catch (e) {} }
+
+/* ---------- tabs ---------- */
+$('#tabs').onclick = e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  sec = t.dataset.s;
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
+  render(); scrollPreviewTo(sec);
+};
+
+function render() {
+  $('#n-work').textContent = state.work.length; $('#n-film').textContent = state.film.length;
+  $('#dropTarget').textContent = LABEL[sec];
+  renderLibrary(); renderEditor();
+}
+
+/* ---------- library ---------- */
+function renderLibrary() {
+  const q = $('#search').value.toLowerCase(), onlyNew = $('#onlyNew').checked;
+  const folders = [...new Set(lib.map(i => i.folder))];
+  $('#folders').innerHTML = ['all', ...folders].map(f => `<span class="chip ${f === folder ? 'on' : ''}" data-f="${esc(f)}">${esc(f)}</span>`).join('');
+  const items = lib.filter(i => (folder === 'all' || i.folder === folder) && (!q || i.src.toLowerCase().includes(q)) && (!onlyNew || i.new));
+  const groups = {};
+  items.forEach(i => (groups[i.folder] ||= []).push(i));
+  $('#library').innerHTML = Object.entries(groups).map(([g, l]) => `
+    <div class="lib-group"><h3>${esc(g)} · ${l.length}</h3><div class="grid3">
+      ${l.map(i => { const u = has(i.src); return `
+        <div class="tile ${u ? 'used' : ''}" data-src="${esc(i.src)}" title="${esc(i.src)}${u ? ' — click to remove' : ' — click to add'}">
+          <img loading="lazy" src="${thumb(i.src)}">
+          ${u ? `<span class="badge">in ${LABEL[sec]}</span>` : i.new ? '<span class="badge new">new</span>' : ''}
+          <span class="plus">${u ? '✓' : '+'}</span>
+        </div>`; }).join('')}
+    </div></div>`).join('') || '<p class="hint">No photos match.</p>';
+}
+$('#folders').onclick = e => { const c = e.target.closest('.chip'); if (c) { folder = c.dataset.f; renderLibrary(); } };
+$('#search').oninput = renderLibrary; $('#onlyNew').onchange = renderLibrary;
+$('#library').onclick = e => {
+  const t = e.target.closest('.tile'); if (!t) return;
+  toggle(t.dataset.src); changed();
+};
+function toggle(src) {
+  if (has(src)) { state[sec] = list().filter(i => srcOf(i) !== src); toast(`Removed from ${LABEL[sec]}`); }
+  else { add(src); toast(`Added to ${LABEL[sec]}`); }
+}
+function add(src) {
+  if (has(src)) return;
+  list().push(sec === 'film' ? { src, title: '', credit: '' } : src);
+}
+
+/* drop from Finder */
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(ev => document.addEventListener(ev, e => { if (e.dataTransfer?.types.includes('Files')) { e.preventDefault(); drop.classList.add('over'); } }));
+document.addEventListener('dragleave', e => { if (!e.relatedTarget) drop.classList.remove('over'); });
+document.addEventListener('drop', async e => {
+  drop.classList.remove('over');
+  if (!e.dataTransfer?.files.length) return;
+  e.preventDefault();
+  const files = [...e.dataTransfer.files], fold = $('#dropFolder').value.trim() || 'dance';
+  let ok = 0;
+  for (const [n, f] of files.entries()) {
+    toast(`Uploading ${n + 1}/${files.length}…`, 10000);
+    const r = await fetch(`/api/upload?folder=${encodeURIComponent(fold)}&name=${encodeURIComponent(f.name)}`, { method: 'POST', body: f }).then(r => r.json());
+    if (r.error) { toast(r.error, 3000); continue; }
+    add(r.src); ok++;
+  }
+  lib = await fetch('/api/library').then(r => r.json());
+  changed(); toast(`${ok} photo(s) added to ${LABEL[sec]}`);
+});
+
+/* ---------- editor ---------- */
+function renderEditor() {
+  const l = list();
+  $('#secTitle').textContent = sec === 'work' ? 'Work grid' : 'Film grid';
+  $('#secCount').textContent = l.length + (l.length === 1 ? ' photo' : ' photos');
+  if (!l.length) { $('#editor').innerHTML = '<p class="empty">Click photos on the left (or drop them from Finder) to add them here.</p>'; return; }
+  if (sec === 'work') {
+    $('#editor').innerHTML = `<p class="hint">Drag to reorder. The first 3 load first on the site. Click a name to rename the file.</p>
+      <div class="work-cards">${l.map((src, i) => `
+        <div class="card" draggable="true" data-i="${i}">
+          <div class="th"><img src="${thumb(src)}"></div>
+          <span class="num">${i + 1}</span>
+          <button class="x" data-rm title="Remove from grid">✕</button>
+          <div class="name" data-ren title="${esc(src)}">${esc(src.split('/').pop())}</div>
+        </div>`).join('')}</div>`;
+  } else {
+    $('#editor').innerHTML = `<p class="hint">Drag to reorder. Each film gets a title and a credit line.</p>
+      ${l.map((f, i) => `
+        <div class="card film-row" draggable="true" data-i="${i}">
+          <div class="th"><img src="${thumb(f.src)}"></div>
+          <div class="fields">
+            <input data-k="title" placeholder="Title" value="${esc(f.title)}">
+            <input data-k="credit" placeholder="Credit, e.g. dir. … · movement direction Tanjot Panesar" value="${esc(f.credit)}">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="name" data-ren title="${esc(f.src)}">${esc(f.src.split('/').pop())}</span>
+              <span class="spacer"></span>
+              <button class="x" data-rm>Remove</button>
+            </div>
+          </div>
+        </div>`).join('')}`;
+  }
+}
+const ed = $('#editor');
+ed.addEventListener('input', e => {
+  const k = e.target.dataset.k; if (!k) return;
+  list()[+e.target.closest('.card').dataset.i][k] = e.target.value;
+  changed(false);
+});
+ed.addEventListener('click', e => {
+  const card = e.target.closest('.card'); if (!card) return;
+  const i = +card.dataset.i;
+  if (e.target.closest('[data-rm]')) { list().splice(i, 1); changed(); }
+  else if (e.target.closest('[data-ren]')) openRename(srcOf(list()[i]));
+});
+let from = null;
+ed.addEventListener('dragstart', e => {
+  const c = e.target.closest('.card'); if (!c || e.target.matches('input')) return;
+  from = +c.dataset.i; c.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/x-curate', '1');
+});
+ed.addEventListener('dragover', e => {
+  if (from === null) return; e.preventDefault();
+  ed.querySelectorAll('.over').forEach(x => x.classList.remove('over'));
+  e.target.closest('.card')?.classList.add('over');
+});
+ed.addEventListener('drop', e => {
+  if (from === null) return;
+  e.preventDefault(); e.stopPropagation();
+  const c = e.target.closest('.card');
+  if (c && +c.dataset.i !== from) { const l = list(); l.splice(+c.dataset.i, 0, ...l.splice(from, 1)); changed(); }
+});
+ed.addEventListener('dragend', () => { from = null; ed.querySelectorAll('.dragging,.over').forEach(x => x.classList.remove('dragging', 'over')); });
+
+/* ---------- rename ---------- */
+let renSrc = null;
+function openRename(src) {
+  renSrc = src; $('#renPath').value = src; $('#renResult').textContent = '';
+  $('#renDlg').showModal();
+  const p = $('#renPath'), dot = src.lastIndexOf('.'), slash = src.lastIndexOf('/');
+  p.focus(); p.setSelectionRange(slash + 1, dot > slash ? dot : src.length);
+}
+$('#renCancel').onclick = () => $('#renDlg').close();
+$('#renPath').onkeydown = e => { if (e.key === 'Enter') $('#renGo').click(); };
+$('#renGo').onclick = async () => {
+  const to = $('#renPath').value.trim();
+  if (!to || to === renSrc) return $('#renDlg').close();
+  const r = await fetch('/api/rename', { method: 'POST', body: JSON.stringify({ from: renSrc, to }) }).then(r => r.json());
+  if (r.error) { $('#renResult').className = 'result err'; $('#renResult').textContent = r.error; return; }
+  const swap = s => s === renSrc ? r.src : s;
+  for (const st of [state, JSON.parse(saved)]) {
+    st.work = st.work.map(swap); st.film.forEach(f => f.src = swap(f.src));
+    if (st !== state) saved = JSON.stringify(st);
+  }
+  lib = await fetch('/api/library').then(r => r.json());
+  $('#renDlg').close(); changed(); toast('Renamed');
+};
+
+/* ---------- publish ---------- */
+$('#reload').onclick = refreshPreview;
+$('#vp').onchange = e => { $('#frame').style.width = e.target.value; };
+$('#revert').onclick = () => { if (confirm('Discard all unpublished changes?')) { state = JSON.parse(saved); changed(); } };
+$('#publish').onclick = async () => {
+  const old = JSON.parse(saved), parts = [];
+  for (const k of ['work', 'film']) {
+    const a = new Set(old[k].map(srcOf)), b = new Set(state[k].map(srcOf));
+    const add = [...b].filter(s => !a.has(s)).length, rm = [...a].filter(s => !b.has(s)).length;
+    if (JSON.stringify(old[k]) === JSON.stringify(state[k])) continue;
+    const bits = [add && `+${add}`, rm && `−${rm}`].filter(Boolean).join(' ');
+    parts.push(`${k} grid${bits ? ' (' + bits + ')' : ''}`);
+  }
+  $('#pubMsg').value = 'Update ' + parts.join(', ');
+  $('#pubResult').textContent = ''; $('#pubResult').className = 'result'; $('#pubGo').disabled = false;
+  const s = await fetch('/api/state').then(r => r.json());
+  $('#pubWarn').innerHTML = s.uncommitted.length
+    ? `<div class="warn">Heads up: the site's own code has uncommitted edits (${s.uncommitted.map(esc).join(', ')}). This publish won't include them. If the live site doesn't read <code>data/film.json</code> yet, commit those first.</div>` : '';
+  $('#pubDlg').showModal();
+};
+$('#pubCancel').onclick = () => $('#pubDlg').close();
+$('#pubGo').onclick = async () => {
+  $('#pubGo').disabled = true; $('#pubResult').textContent = 'Committing…';
+  const r = await fetch('/api/publish', { method: 'POST', body: JSON.stringify({ state, message: $('#pubMsg').value, push: $('#pubPush').checked }) }).then(r => r.json());
+  if (r.error) { $('#pubResult').className = 'result err'; $('#pubResult').textContent = r.error; $('#pubGo').disabled = false; return; }
+  $('#pubResult').textContent = r.nothing ? 'Nothing changed. No commit made.'
+    : `✓ Committed ${r.sha} on ${r.branch}\n${r.files.join('\n')}` + (r.pushed ? `\n\nPush: ${r.pushed}` : '');
+  saved = JSON.stringify(state); changed(false);
+  lib = await fetch('/api/library').then(r => r.json()); renderLibrary();
+};
+window.addEventListener('beforeunload', e => { if (state && JSON.stringify(state) !== saved) e.preventDefault(); });
+
+init();
+</script>
+</body>
+</html>
