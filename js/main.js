@@ -11,7 +11,8 @@
 
   function load(name) {
     if (draft[name]) return Promise.resolve(draft[name]);
-    return fetch('data/' + name + '.json').then(r => r.json()).catch(() => []);
+    // no-cache: always check for a newer list, so a publish shows up on the next reload
+    return fetch('data/' + name + '.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
   }
 
   function buildFilmGrid(films) {
