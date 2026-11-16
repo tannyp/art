@@ -9,10 +9,16 @@
   // the photo curator (curate/server.py) injects unpublished edits here for its preview
   const draft = window.__CURATE__ || {};
 
+  // data/site.js holds the same lists as a script, for when index.html is opened
+  // straight from disk (file://), where the browser blocks fetching the JSON
+  const bundled = window.__SITE__ || {};
+
   function load(name) {
     if (draft[name]) return Promise.resolve(draft[name]);
     // no-cache: always check for a newer list, so a publish shows up on the next reload
-    return fetch('data/' + name + '.json', { cache: 'no-cache' }).then(r => r.json()).catch(() => []);
+    return fetch('data/' + name + '.json', { cache: 'no-cache' })
+      .then(r => r.json())
+      .catch(() => bundled[name] || []);
   }
 
   function buildFilmGrid(films) {
